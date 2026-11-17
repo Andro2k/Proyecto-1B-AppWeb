@@ -16,3 +16,9 @@ Celular: arrastrar para girar, tocar para aletear, botón «Picada».
 
 ## Créditos
 Gráficos dibujados por código (sin imágenes externas). Fuentes de los datos: ver `datos.js`.
+
+## Acceso desde otras redes
+- **Misma red (Wi-Fi/LAN):** `python app.py` ya escucha en `0.0.0.0:5000`; abrir `http://IP-DE-TU-PC:5000` (ver IP con `ip a`). Puede hacer falta abrir el puerto 5000 en el firewall.
+- **Otras redes, rápido (temporal):** con el servidor corriendo, `cloudflared tunnel --url http://localhost:5000` o `ngrok http 5000` entregan un enlace público.
+- **Publicarlo (Render, Railway, etc.):** Build `pip install -r requirements.txt`, Start `gunicorn app:app`. En el plan gratuito el disco es temporal: los puntajes del servidor se pierden al reiniciar (variable `DATA_DIR` para apuntar a un disco persistente).
+- `FLASK_DEBUG=1 python app.py` solo para desarrollo (activa el depurador y limita el servidor a localhost).

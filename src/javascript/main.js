@@ -30,7 +30,7 @@ function aviso(titulo, texto, fuente = '') {
   $('avisoTitulo').textContent = titulo; $('avisoTexto').textContent = texto;
   $('avisoFuente').textContent = fuente ? 'Fuente: ' + fuente : '';
   $('aviso').hidden = false; clearTimeout(avisoT);
-  avisoT = setTimeout(() => { $('aviso').hidden = true; }, 6000);
+  avisoT = setTimeout(() => { $('aviso').hidden = true; }, 8000);
 }
 function descubrir(id) {
   if (descubiertos.has(id)) return;
