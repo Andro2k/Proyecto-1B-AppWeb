@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Cóndor andino">
+  <rect width="64" height="64" rx="14" fill="#e0b24f"/>
+  <path d="M0 64 L22 40 L34 54 L44 44 L64 64 Z" fill="#3d4c5a"/>
+  <path d="M4 34 C14 20 26 20 32 29 C38 20 50 20 60 34 C50 31 42 34 36 44 L32 49 L28 44 C22 34 14 31 4 34 Z" fill="#121c24"/>
+  <ellipse cx="32" cy="30" rx="6.5" ry="3" fill="#f3efe3"/>
+  <circle cx="32" cy="26" r="3.6" fill="#b24a3a"/>
+</svg>

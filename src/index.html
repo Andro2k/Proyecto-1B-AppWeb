@@ -4,21 +4,32 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Guardianes del Cóndor · Grupo 02</title>
+  <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+  <meta name="theme-color" content="#121c24">
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <header class="hud" aria-label="Estado del juego">
-    <div class="hud-bloque"><span class="etq">Energía</span><div class="barra"><div id="barEnergia"></div></div></div>
-    <div class="hud-bloque"><span class="etq">Vidas</span><strong id="vidas" class="vidas">♥♥♥</strong></div>
-    <div class="hud-bloque"><span class="etq">Puntos</span><strong id="puntos">0</strong></div>
-    <div class="hud-bloque"><span class="etq">Nivel</span><strong id="nivel">1</strong></div>
-    <div class="hud-bloque"><span class="etq">Altitud</span><strong id="altitud">3 800 m</strong></div>
-    <div class="hud-bloque"><span class="etq">Datos</span><strong id="datos">0/14</strong></div>
-    <div class="hud-bloque hud-ancho"><span class="etq">Camino al nido</span><div class="barra progreso"><div id="barProgreso"></div></div></div>
-  </header>
-
   <main class="juego">
     <canvas id="lienzo" aria-label="Vuelo del cóndor en perspectiva"></canvas>
+
+    <header class="hud-sup" aria-label="Estado del juego">
+      <button id="btnPausa" type="button" class="btn-pausa" aria-label="Pausa">❚❚</button>
+      <div class="hud-camino">
+        <span class="etq">Camino al nido</span>
+        <div class="barra progreso"><div id="barProgreso"></div></div>
+      </div>
+      <dl class="hud-datos">
+        <div><dt>Nivel</dt><dd id="nivel">1/3</dd></div>
+        <div><dt>Altitud</dt><dd id="altitud">3 800 m</dd></div>
+        <div><dt>Datos</dt><dd id="datos">0/14</dd></div>
+      </dl>
+    </header>
+
+    <footer class="hud-inf" aria-label="Energía, vidas y puntos">
+      <div class="hud-lado"><span class="etq">Vidas</span><strong id="vidas" class="vidas">♥♥♥</strong></div>
+      <div class="hud-energia"><span class="etq">Energía</span><div class="barra"><div id="barEnergia"></div></div></div>
+      <div class="hud-lado"><span class="etq">Puntos</span><strong id="puntos">0</strong></div>
+    </footer>
 
     <aside id="aviso" class="aviso" role="status" aria-live="polite" hidden>
       <h2 id="avisoTitulo"></h2><p id="avisoTexto"></p><small id="avisoFuente"></small>
@@ -88,7 +99,6 @@
 
   <footer class="pie">
     <button id="btnPica" type="button">Picada ↓</button>
-    <button id="btnPausa" type="button">Pausa</button>
   </footer>
 
   <dialog id="enciclopedia" aria-labelledby="tEnc">
