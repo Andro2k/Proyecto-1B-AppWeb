@@ -1,17 +1,10 @@
 [project]
 name = "proyecto-1b"
 version = "0.1.0"
-description = "Add your description here"
+description = "Guardianes del Cóndor - Grupo 02"
 readme = "README.md"
-authors = [
-    { name = "Andro2K", email = "kirito100crack@gmail.com" }
-]
-requires-python = ">=3.14"
+requires-python = ">=3.10"
 dependencies = ["flask>=3.0"]
 
-[project.scripts]
-proyecto-1b = "proyecto_1b:main"
-
-[build-system]
-requires = ["uv_build>=0.13.8,<0.14.0"]
-build-backend = "uv_build"
+[tool.uv]
+package = false
