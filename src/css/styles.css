@@ -1,0 +1,54 @@
+:root {
+  --noche: #121c24; --pizarra: #1e2b36; --crema: #f3efe3; --oro: #e0b24f;
+  --ocre: #8a6a1f; --verde: #8bc34a; --rojo: #d9534f; --texto: #f3efe3;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; gap: .5rem; padding: .5rem;
+  background: var(--noche); color: var(--texto); font-family: "Segoe UI", system-ui, sans-serif; }
+h1, h2 { font-family: Impact, "Arial Black", sans-serif; letter-spacing: .03em; text-transform: uppercase; margin: .2rem 0 .6rem; }
+.etq { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--oro); }
+
+.hud { display: flex; flex-wrap: wrap; gap: .5rem 1rem; align-items: center; background: var(--pizarra);
+  border-radius: 10px; padding: .5rem .8rem; max-width: 1100px; width: 100%; margin: 0 auto; }
+.hud-bloque { display: flex; flex-direction: column; min-width: 70px; }
+.hud-ancho { flex: 1; min-width: 160px; }
+.barra { height: 12px; background: #0b1117; border-radius: 6px; overflow: hidden; }
+#barEnergia { height: 100%; width: 100%; background: var(--verde); transition: width .15s; }
+#barEnergia.baja { background: var(--rojo); }
+#barProgreso { height: 100%; width: 0; background: var(--oro); }
+.vidas { color: var(--rojo); letter-spacing: .1em; }
+
+.juego { position: relative; width: 100%; max-width: 1100px; margin: 0 auto; border-radius: 12px; overflow: hidden; background: #000; }
+#lienzo { display: block; width: 100%; aspect-ratio: 16 / 9; max-height: 72vh; touch-action: none; }
+
+.pantalla { position: absolute; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgba(10, 16, 22, .78); }
+.pantalla[hidden], .aviso[hidden] { display: none; }
+.tarjeta { background: var(--crema); color: var(--noche); border-radius: 14px; padding: 1.2rem 1.5rem; max-width: 520px; width: 100%; max-height: 100%; overflow: auto; }
+.tarjeta .etq { color: var(--ocre); }
+.controles { padding-left: 1.1rem; line-height: 1.8; font-size: .9rem; }
+kbd { background: var(--noche); color: var(--crema); border-radius: 4px; padding: 0 .4rem; margin: 0 .1rem; font-size: .8rem; }
+.acciones { display: flex; gap: .6rem; flex-wrap: wrap; margin: .8rem 0; }
+
+button, input { font: inherit; padding: .55rem 1rem; border-radius: 8px; border: 2px solid var(--noche); background: transparent; color: inherit; cursor: pointer; }
+input { cursor: text; background: #fff; }
+button.primario { background: var(--oro); color: var(--noche); font-weight: 700; }
+button:focus-visible, input:focus-visible { outline: 3px solid #2d7ff9; outline-offset: 2px; }
+.pie button { color: var(--crema); border-color: var(--oro); }
+
+.opciones { display: grid; gap: .5rem; margin: .8rem 0; }
+.opciones button.ok { background: #b9e08f; } .opciones button.mal { background: #f2b3b0; }
+
+.aviso { position: absolute; left: .8rem; bottom: .8rem; max-width: min(380px, 80%); background: rgba(18, 28, 36, .92);
+  border-left: 4px solid var(--oro); border-radius: 8px; padding: .6rem .8rem; }
+.aviso h2 { font-size: .85rem; color: var(--oro); margin: 0 0 .2rem; }
+.aviso p { margin: 0 0 .2rem; font-size: .85rem; } .aviso small { color: #aab8c4; }
+
+.puntajes { padding-left: 1.2rem; font-size: .9rem; }
+.pie { display: flex; gap: .6rem; justify-content: center; }
+dialog { background: var(--crema); color: var(--noche); border: 0; border-radius: 14px; max-width: 560px; width: 92%; }
+dialog::backdrop { background: rgba(0, 0, 0, .6); }
+.enciclo { list-style: none; padding: 0; max-height: 55vh; overflow: auto; }
+.enciclo li { padding: .5rem 0; border-bottom: 1px solid #d6cfba; }
+.enciclo small { display: block; color: #5a5a50; }
+.enciclo .bloqueado { opacity: .45; }
+@media (max-width: 600px) { .tarjeta { padding: .9rem 1rem; } .hud-bloque { min-width: 56px; } }

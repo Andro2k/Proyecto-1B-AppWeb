@@ -7,7 +7,7 @@ authors = [
     { name = "Andro2K", email = "kirito100crack@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = ["flask>=3.0"]
 
 [project.scripts]
 proyecto-1b = "proyecto_1b:main"

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Guardianes del Cóndor · Grupo 02</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="hud" aria-label="Estado del juego">
+    <div class="hud-bloque"><span class="etq">Energía</span><div class="barra"><div id="barEnergia"></div></div></div>
+    <div class="hud-bloque"><span class="etq">Vidas</span><strong id="vidas" class="vidas">♥♥♥</strong></div>
+    <div class="hud-bloque"><span class="etq">Puntos</span><strong id="puntos">0</strong></div>
+    <div class="hud-bloque"><span class="etq">Nivel</span><strong id="nivel">1</strong></div>
+    <div class="hud-bloque"><span class="etq">Altitud</span><strong id="altitud">3 800 m</strong></div>
+    <div class="hud-bloque"><span class="etq">Datos</span><strong id="datos">0/14</strong></div>
+    <div class="hud-bloque hud-ancho"><span class="etq">Camino al nido</span><div class="barra progreso"><div id="barProgreso"></div></div></div>
+  </header>
+
+  <main class="juego">
+    <canvas id="lienzo" aria-label="Vuelo del cóndor en perspectiva"></canvas>
+
+    <aside id="aviso" class="aviso" role="status" aria-live="polite" hidden>
+      <h2 id="avisoTitulo"></h2><p id="avisoTexto"></p><small id="avisoFuente"></small>
+    </aside>
+
+    <section id="menu" class="pantalla" aria-labelledby="tMenu">
+      <div class="tarjeta">
+        <p class="etq">Aplicaciones Web · Grupo 02</p>
+        <h1 id="tMenu">Guardianes del Cóndor</h1>
+        <p>Vuela como un cóndor andino: planea en térmicas, come carroña segura, esquiva cables y llega al nido en el risco.</p>
+        <ul class="controles">
+          <li><kbd>←</kbd><kbd>→</kbd> / <kbd>A</kbd><kbd>D</kbd> girar</li>
+          <li><kbd>Espacio</kbd> / <kbd>↑</kbd> aletear (gasta energía)</li>
+          <li><kbd>↓</kbd> / <kbd>S</kbd> picada para comer</li>
+          <li><kbd>P</kbd> / <kbd>Esc</kbd> pausa · Celular: arrastra para girar, toca para aletear</li>
+        </ul>
+        <div class="acciones">
+          <button id="btnJugar" type="button" class="primario">Jugar</button>
+          <button id="btnEnciclo" type="button">Enciclopedia</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="nivelIntro" class="pantalla" aria-labelledby="tNivel" hidden>
+      <div class="tarjeta">
+        <p class="etq" id="nivelNumero"></p>
+        <h2 id="tNivel"></h2>
+        <p id="nivelConsejo"></p>
+        <button id="btnVolar" type="button" class="primario">Volar</button>
+      </div>
+    </section>
+
+    <section id="pausa" class="pantalla" aria-labelledby="tPausa" hidden>
+      <div class="tarjeta">
+        <h2 id="tPausa">Pausa</h2>
+        <div class="acciones">
+          <button id="btnReanudar" type="button" class="primario">Continuar</button>
+          <button id="btnEncicloPausa" type="button">Enciclopedia</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="pregunta" class="pantalla" aria-labelledby="pregTexto" hidden>
+      <div class="tarjeta">
+        <p class="etq">¡Llegaste al nido! Una pregunta</p>
+        <h2 id="pregTexto"></h2>
+        <div id="opciones" class="opciones"></div>
+        <p id="explicacion" hidden></p>
+        <button id="btnSigue" type="button" class="primario" hidden>Continuar</button>
+      </div>
+    </section>
+
+    <section id="fin" class="pantalla" aria-labelledby="finTitulo" hidden>
+      <div class="tarjeta">
+        <h2 id="finTitulo"></h2>
+        <p>Puntos: <strong id="finPuntos">0</strong> · Estrellas: <strong id="finEstrellas">0</strong> · Datos: <strong id="finDatos">0</strong></p>
+        <p id="finMensaje"></p>
+        <div class="acciones">
+          <input id="nombre" type="text" maxlength="20" placeholder="Tu nombre" aria-label="Tu nombre">
+          <button id="btnGuardar" type="button">Guardar puntaje</button>
+        </div>
+        <ol id="listaPuntajes" class="puntajes"></ol>
+        <button id="btnReiniciar" type="button" class="primario">Jugar de nuevo</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <button id="btnPica" type="button">Picada ↓</button>
+    <button id="btnPausa" type="button">Pausa</button>
+  </footer>
+
+  <dialog id="enciclopedia" aria-labelledby="tEnc">
+    <h2 id="tEnc">Enciclopedia del cóndor</h2>
+    <ul id="listaEnc" class="enciclo"></ul>
+    <form method="dialog"><button class="primario">Cerrar</button></form>
+  </dialog>
+
+  <script src="javascript/datos.js"></script>
+  <script src="javascript/main.js"></script>
+</body>
+</html>
