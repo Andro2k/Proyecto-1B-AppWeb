@@ -72,7 +72,6 @@ export function pantallaFin({ titulo, subtitulo, puntos, estrellas, datos, mensa
   $('finTitulo').textContent = titulo; $('finSubtitulo').textContent = subtitulo;
   $('finPuntos').textContent = puntos; $('finEstrellas').textContent = estrellas; $('finDatos').textContent = datos;
   $('finMensaje').textContent = mensaje; $('btnReiniciar').textContent = botonReiniciar;
-  $('btnGuardar').hidden = true; $('btnGuardar').disabled = false;
   mostrar('fin');
 }
 

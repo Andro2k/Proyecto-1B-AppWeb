@@ -37,7 +37,6 @@ clic('btnEnciclo', abrirEnciclopedia); clic('btnEncicloPausa', abrirEnciclopedia
 clic('btnVolar', partida.volar);
 clic('btnReanudar', partida.alternarPausa); clic('btnPausa', partida.alternarPausa);
 clic('btnSigue', partida.siguiente);
-clic('btnGuardar', partida.guardarPuntaje);
 clic('btnReiniciar', () => partida.nuevoJuego(partida.modo()));
 clic('btnPuntajesMenu', abrirPuntajes); clic('btnPuntajesPausa', abrirPuntajes);
 clic('btnLogrosMenu', abrirLogros); clic('btnLogrosPausa', abrirLogros);

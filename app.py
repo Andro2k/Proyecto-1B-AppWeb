@@ -26,20 +26,29 @@ def inicio():
 
 @app.get("/api/puntajes")
 def obtener_puntajes():
-    return jsonify(sorted(leer_puntajes(), key=lambda r: r["puntos"], reverse=True)[:10])
+    mejores = sorted(leer_puntajes(), key=lambda r: r["puntos"], reverse=True)[:10]
+    return jsonify([{"nombre": r["nombre"], "puntos": r["puntos"]} for r in mejores])
 
 
 @app.post("/api/puntajes")
 def guardar_puntaje():
     datos = request.get_json(silent=True) or {}
-    nombre, puntos = datos.get("nombre"), datos.get("puntos")
+    nombre, puntos, id_registro = datos.get("nombre"), datos.get("puntos"), datos.get("id")
     if not isinstance(nombre, str) or not 1 <= len(nombre.strip()) <= 20:
         return jsonify(error="Nombre inválido (1 a 20 caracteres)"), 400
     if not isinstance(puntos, int) or isinstance(puntos, bool) or not 0 <= puntos <= 1_000_000:
         return jsonify(error="Puntos inválidos"), 400
+    if id_registro is not None and not (isinstance(id_registro, str) and 1 <= len(id_registro) <= 64):
+        return jsonify(error="Identificador inválido"), 400
     with CANDADO:
         registros = leer_puntajes()
-        registros.append({"nombre": nombre.strip(), "puntos": puntos})
+        # Idempotencia: reenviar el mismo id (doble clic, reintento) no crea otro registro.
+        if id_registro and any(r.get("id") == id_registro for r in registros):
+            return jsonify(ok=True, duplicado=True), 200
+        nuevo = {"nombre": nombre.strip(), "puntos": puntos}
+        if id_registro:
+            nuevo["id"] = id_registro
+        registros.append(nuevo)
         temporal = ARCHIVO.with_suffix(".tmp")
         temporal.write_text(json.dumps(registros[-200:], ensure_ascii=False), encoding="utf-8")
         temporal.replace(ARCHIVO)
