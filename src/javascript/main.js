@@ -12,14 +12,15 @@ const ANCHO = 14, TECHO = 30, NIDO_ALTO = 8, CAM_ATRAS = 9;
 let W = 1, H = 1, F = 1, HOR = 1;           // tamaño, foco y horizonte
 let est = 'menu', nv = 0, puntos = 0, estrellas = 0, tiempo = 0, ultimo = 0, comidas = 0, limpio = 0, avisoT = 0;
 let p, ents = [], termicas = [], descubiertos = new Set();
+let jugadores = [], turno = 0, resultados = [], modo = 'solo', sesiones = [], sesionActual = 0, anchoCanvas = 1;
 const cam = { x: 0, y: 4, z: 0 };
-const entrada = { izq: false, der: false, aleteo: false, pica: false, tx: null };
+let entrada = { izq: false, der: false, aleteo: false, pica: false, tx: null };
 
 /* ---------- Pantalla ---------- */
 function ajustar() {
   const r = lienzo.getBoundingClientRect(), d = window.devicePixelRatio || 1;
   lienzo.width = Math.max(1, r.width * d); lienzo.height = Math.max(1, r.height * d);
-  W = lienzo.width; H = lienzo.height; F = H * 0.9; HOR = H * 0.36;
+  anchoCanvas = lienzo.width; W = lienzo.width; H = lienzo.height; F = H * 0.9; HOR = H * 0.36;
 }
 window.addEventListener('resize', ajustar);
 
@@ -54,6 +55,23 @@ function dibujarEnciclopedia() {
 function abrirEnciclopedia() {
   if (est === 'juego') alternarPausa();
   dibujarEnciclopedia(); $('enciclopedia').showModal();
+}
+function abrirDialogo(id) { $(id).showModal(); }
+function dibujarLogros() {
+  const logros = [
+    ['Explorador', 'Descubre datos sobre el cóndor.', descubiertos.size > 0],
+    ['A las alturas', 'Encuentra una corriente térmica.', descubiertos.has('vuelo')],
+    ['Buen vuelo', 'Llega al nido al final del recorrido.', descubiertos.has('nido')],
+    ['Cóndor experto', 'Descubre todos los datos de la enciclopedia.', descubiertos.size === Object.keys(DATOS).length]
+  ];
+  const ul = $('listaLogros'); ul.replaceChildren();
+  for (const [titulo, detalle, logrado] of logros) {
+    const li = document.createElement('li'); li.className = logrado ? 'logro logrado' : 'logro';
+    li.innerHTML = '<strong></strong><span></span><small></small>';
+    li.querySelector('strong').textContent = (logrado ? '🏅 ' : '🔒 ') + titulo;
+    li.querySelector('span').textContent = detalle;
+    li.querySelector('small').textContent = logrado ? 'Conseguido' : 'Por conseguir'; ul.append(li);
+  }
 }
 function actualizarHud() {
   const L = NIVELES[nv];
@@ -92,8 +110,39 @@ function iniciarNivel(n, vidas) {
   $('nivelConsejo').textContent = NIVELES[n].consejo;
   est = 'nivel'; mostrar('nivelIntro'); actualizarHud();
 }
-function nuevoJuego() {
-  puntos = 0; estrellas = 0; comidas = 0; limpio = 0; descubiertos = new Set();
+function nuevoJuego(nuevoModo = 'solo') {
+  modo = nuevoModo;
+  jugadores = [$('nombreJ1').value.trim() || 'Jugador 1', $('nombreJ2').value.trim() || 'Jugador 2'];
+  turno = 0; resultados = []; sesiones = [];
+  $('campoJugador2').hidden = modo === 'solo';
+  $('btnSolo').classList.toggle('primario', modo === 'solo'); $('btnDuo').classList.toggle('primario', modo === 'duo');
+  $('btnSolo').setAttribute('aria-pressed', String(modo === 'solo')); $('btnDuo').setAttribute('aria-pressed', String(modo === 'duo'));
+  $('duoHud').hidden = modo !== 'duo'; $('btnPica').hidden = modo === 'duo';
+  $('juego').classList.toggle('modo-duo', modo === 'duo');
+  if (modo === 'solo') { comenzarTurno(); return; }
+  for (let i = 0; i < 2; i++) {
+    sesionActual = i; entrada = crearEntrada(); iniciarNivel(0, 3); sesiones[i] = guardarSesion();
+  }
+  sesionActual = 0; cargarSesion(sesiones[0]); est = 'juego'; mostrar(null);
+  $('duoNombre1').textContent = jugadores[0]; $('duoNombre2').textContent = jugadores[1]; actualizarMarcadorDuo();
+}
+function crearEntrada() { return { izq: false, der: false, aleteo: false, pica: false, tx: null }; }
+function guardarSesion() {
+  return { p, ents, termicas, descubiertos, nv, puntos, estrellas, comidas, limpio,
+    cam: { x: cam.x, y: cam.y, z: cam.z }, entrada, nombre: jugadores[sesionActual], terminado: sesiones[sesionActual]?.terminado || false };
+}
+function cargarSesion(s) {
+  p = s.p; ents = s.ents; termicas = s.termicas; descubiertos = s.descubiertos; nv = s.nv;
+  puntos = s.puntos; estrellas = s.estrellas; comidas = s.comidas; limpio = s.limpio; entrada = s.entrada;
+  cam.x = s.cam.x; cam.y = s.cam.y; cam.z = s.cam.z;
+}
+function actualizarMarcadorDuo() {
+  $('duoPuntos1').textContent = (sesiones[0]?.puntos || 0) + ' pts';
+  $('duoPuntos2').textContent = (sesiones[1]?.puntos || 0) + ' pts';
+}
+function comenzarTurno() {
+  puntos = 0; estrellas = 0; comidas = 0; limpio = 0; tiempo = 0; descubiertos = new Set();
+  $('turnoPausa').textContent = 'Turno de ' + jugadores[turno];
   iniciarNivel(0, 3);
 }
 
@@ -167,6 +216,11 @@ function actualizar(dt) {
 
 /* ---------- Fin de nivel, preguntas y puntajes ---------- */
 function terminarNivel() {
+  if (modo === 'duo') {
+    puntos += 300; descubrir('nido'); if (nv === 0) descubrir('recorrido'); if (nv === 1) descubrir('reproduccion');
+    if (nv === NIVELES.length - 1) { finJuego(true); return; }
+    const vidas = p.vidas; nv++; crearMundo(vidas); actualizarHud(); return;
+  }
   est = 'pregunta'; puntos += 300; descubrir('nido');
   if (nv === 0) descubrir('recorrido'); if (nv === 1) descubrir('reproduccion');
   const q = PREGUNTAS[nv], c = $('opciones');
@@ -194,31 +248,57 @@ async function cargarPuntajes() {
   catch { return leerLocal(); }
 }
 async function guardarPuntaje() {
-  const nombre = $('nombre').value.trim().slice(0, 20) || 'Anónimo', reg = { nombre, puntos: Math.round(puntos) };
-  try {
-    const r = await fetch('/api/puntajes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(reg) });
-    if (!r.ok) throw new Error();
-  } catch { const l = leerLocal(); l.push(reg); localStorage.setItem('puntajes', JSON.stringify(l)); }   // sin servidor: guarda en el navegador
-  mostrarPuntajes();
+  for (const resultado of resultados) {
+    const reg = { nombre: resultado.nombre, puntos: resultado.puntos };
+    try {
+      const r = await fetch('/api/puntajes', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(reg) });
+      if (!r.ok) throw new Error();
+    } catch { const l = leerLocal(); l.push(reg); localStorage.setItem('puntajes', JSON.stringify(l)); }
+  }
+  $('btnGuardar').disabled = true; mostrarPuntajes();
 }
 async function mostrarPuntajes() {
-  const lista = (await cargarPuntajes()).sort((a, b) => b.puntos - a.puntos).slice(0, 5), ol = $('listaPuntajes');
-  ol.replaceChildren();
-  for (const r of lista) { const li = document.createElement('li'); li.textContent = r.nombre + ' — ' + r.puntos; ol.append(li); }
+  const lista = (await cargarPuntajes()).sort((a, b) => b.puntos - a.puntos).slice(0, 10);
+  for (const id of ['listaPuntajes', 'puntajesGlobales']) {
+    const ol = $(id); ol.replaceChildren();
+    for (const r of lista) { const li = document.createElement('li'); li.textContent = r.nombre + ' — ' + r.puntos; ol.append(li); }
+  }
 }
 function finJuego(gano) {
+  if (modo === 'duo') {
+    const s = sesiones[sesionActual]; s.terminado = true;
+    resultados[sesionActual] = { nombre: jugadores[sesionActual], puntos: Math.round(puntos), estrellas, datos: descubiertos.size, gano };
+    if (sesiones.every(x => x.terminado)) finalizarDuo();
+    return;
+  }
   est = 'fin';
   if (gano) { descubrir('poblacion'); descubrir('simbolo'); } else descubrir('longevidad');
+  const resultado = { nombre: jugadores[turno], puntos: Math.round(puntos), estrellas, datos: descubiertos.size, gano };
+  resultados[turno] = resultado;
   $('finTitulo').textContent = gano ? '¡Los cóndores te lo agradecen!' : 'Fin del juego';
+  $('finSubtitulo').textContent = jugadores[turno] + ' consiguió ' + resultado.puntos + ' puntos.';
   $('finPuntos').textContent = Math.round(puntos); $('finEstrellas').textContent = estrellas;
   $('finDatos').textContent = descubiertos.size + '/' + Object.keys(DATOS).length;
   $('finMensaje').textContent = DATOS.poblacion.texto + ' Cada cóndor cuenta.';
+  $('btnReiniciar').textContent = 'Jugar otra partida';
+  $('btnGuardar').hidden = true; $('btnGuardar').disabled = false;
   mostrar('fin'); mostrarPuntajes();
+  guardarPuntaje();
+}
+function finalizarDuo() {
+  est = 'fin'; const a = resultados[0], b = resultados[1];
+  $('finTitulo').textContent = a.puntos === b.puntos ? '¡Empate!' : (a.puntos > b.puntos ? a.nombre : b.nombre) + ' gana la partida';
+  $('finSubtitulo').textContent = a.nombre + ': ' + a.puntos + ' puntos · ' + b.nombre + ': ' + b.puntos + ' puntos';
+  $('finPuntos').textContent = a.puntos + ' / ' + b.puntos; $('finEstrellas').textContent = a.estrellas + ' / ' + b.estrellas;
+  $('finDatos').textContent = a.datos + ' / ' + b.datos; $('finMensaje').textContent = 'Cada jugador completó su propio recorrido. ¡Jueguen otra partida para desempatar!';
+  $('btnReiniciar').textContent = 'Volver a jugar'; $('btnGuardar').hidden = true;
+  mostrar('fin'); guardarPuntaje();
 }
 function alternarPausa() {
-  if (est === 'juego') { est = 'pausa'; mostrar('pausa'); }
+  if (est === 'juego') { est = 'pausa'; $('turnoPausa').textContent = 'Turno de ' + jugadores[turno]; mostrar('pausa'); }
   else if (est === 'pausa') { est = 'juego'; mostrar(null); }
 }
+function salirAlMenu() { est = 'menu'; modo = 'solo'; $('juego').classList.remove('modo-duo'); $('duoHud').hidden = true; $('campoJugador2').hidden = false; $('btnPica').hidden = false; mostrar('menu'); entrada.izq = entrada.der = entrada.aleteo = entrada.pica = false; entrada.tx = null; }
 
 /* ---------- Dibujo en perspectiva ---------- */
 function proy(x, y, z) { const s = F / (z - cam.z); return { x: W / 2 + (x - cam.x) * s, y: HOR + (cam.y - y) * s, s }; }
@@ -330,14 +410,38 @@ function dibujar() {
   }
   if (p.invul > 1.4) { g.fillStyle = 'rgba(217,83,79,.25)'; g.fillRect(0, 0, W, H); }
 }
+function dibujarDuo() {
+  const mitad = anchoCanvas / 2, anchoPrevio = W;
+  for (let i = 0; i < 2; i++) {
+    g.save(); g.beginPath(); g.rect(i * mitad, 0, mitad, H); g.clip(); g.translate(i * mitad, 0);
+    W = mitad; sesionActual = i; cargarSesion(sesiones[i]); dibujar(); sesiones[i] = guardarSesion();
+    g.restore();
+  }
+  W = anchoPrevio; sesionActual = 0; cargarSesion(sesiones[0]);
+  g.fillStyle = 'rgba(243,239,227,.72)'; g.fillRect(mitad - 1, 0, 2, H);
+  actualizarMarcadorDuo();
+}
 
 /* ---------- Entrada y bucle ---------- */
 const teclas = { ArrowLeft: 'izq', a: 'izq', A: 'izq', ArrowRight: 'der', d: 'der', D: 'der', ArrowUp: 'aleteo', w: 'aleteo', W: 'aleteo', ' ': 'aleteo', ArrowDown: 'pica', s: 'pica', S: 'pica' };
 window.addEventListener('keydown', e => {
   if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') { alternarPausa(); return; }
+  if (modo === 'duo' && est === 'juego') {
+    const duoKeys = {
+      a: [0, 'izq'], A: [0, 'izq'], d: [0, 'der'], D: [0, 'der'], w: [0, 'aleteo'], W: [0, 'aleteo'], s: [0, 'pica'], S: [0, 'pica'],
+      ArrowLeft: [1, 'izq'], ArrowRight: [1, 'der'], ArrowUp: [1, 'aleteo'], ' ': [1, 'aleteo'], ArrowDown: [1, 'pica']
+    };
+    const duoKey = duoKeys[e.key]; if (duoKey) { sesiones[duoKey[0]].entrada[duoKey[1]] = true; e.preventDefault(); } return;
+  }
   const k = teclas[e.key]; if (k) { entrada[k] = true; if (est === 'juego') e.preventDefault(); }
 });
-window.addEventListener('keyup', e => { const k = teclas[e.key]; if (k) entrada[k] = false; });
+window.addEventListener('keyup', e => {
+  if (modo === 'duo') {
+    const duoKeys = { a: [0, 'izq'], A: [0, 'izq'], d: [0, 'der'], D: [0, 'der'], w: [0, 'aleteo'], W: [0, 'aleteo'], s: [0, 'pica'], S: [0, 'pica'], ArrowLeft: [1, 'izq'], ArrowRight: [1, 'der'], ArrowUp: [1, 'aleteo'], ' ': [1, 'aleteo'], ArrowDown: [1, 'pica'] };
+    const duoKey = duoKeys[e.key]; if (duoKey) sesiones[duoKey[0]].entrada[duoKey[1]] = false; return;
+  }
+  const k = teclas[e.key]; if (k) entrada[k] = false;
+});
 function posX(e) { const r = lienzo.getBoundingClientRect(); return ((e.clientX - r.left) / r.width - 0.5) * 2 * ANCHO; }
 lienzo.addEventListener('pointerdown', e => { entrada.tx = posX(e); entrada.aleteo = true; });
 lienzo.addEventListener('pointermove', e => { if (entrada.tx !== null) entrada.tx = posX(e); });
@@ -347,15 +451,38 @@ $('btnPica').addEventListener('pointerup', () => { entrada.pica = false; });
 $('btnPica').addEventListener('pointerleave', () => { entrada.pica = false; });
 
 const clic = (id, f) => $(id).addEventListener('click', f);
-clic('btnJugar', nuevoJuego); clic('btnEnciclo', abrirEnciclopedia); clic('btnEncicloPausa', abrirEnciclopedia);
+clic('btnSolo', () => nuevoJuego('solo')); clic('btnDuo', () => nuevoJuego('duo')); clic('btnEnciclo', abrirEnciclopedia); clic('btnEncicloPausa', abrirEnciclopedia);
 clic('btnVolar', () => { est = 'juego'; mostrar(null); });
 clic('btnReanudar', alternarPausa); clic('btnPausa', alternarPausa);
 clic('btnSigue', () => { if (nv < NIVELES.length - 1) iniciarNivel(nv + 1, p.vidas); else finJuego(true); });
-clic('btnGuardar', guardarPuntaje); clic('btnReiniciar', nuevoJuego);
+clic('btnGuardar', guardarPuntaje);
+clic('btnReiniciar', () => {
+  if (modo === 'duo') nuevoJuego('duo');
+  else nuevoJuego('solo');
+});
+clic('btnPuntajesMenu', async () => { await mostrarPuntajes(); abrirDialogo('panelPuntajes'); });
+clic('btnPuntajesPausa', async () => { await mostrarPuntajes(); abrirDialogo('panelPuntajes'); });
+clic('btnLogrosMenu', () => { dibujarLogros(); abrirDialogo('panelLogros'); });
+clic('btnLogrosPausa', () => { dibujarLogros(); abrirDialogo('panelLogros'); });
+clic('btnAjustes', () => abrirDialogo('panelAjustes'));
+clic('btnMenuPausa', salirAlMenu);
+const aplicarAjustes = () => {
+  document.body.classList.toggle('alto-contraste', $('ajusteContraste').checked);
+  document.body.classList.toggle('texto-grande', $('ajusteTexto').checked);
+  localStorage.setItem('ajustes-condor', JSON.stringify({ contraste: $('ajusteContraste').checked, texto: $('ajusteTexto').checked }));
+};
+$('ajusteContraste').addEventListener('change', aplicarAjustes); $('ajusteTexto').addEventListener('change', aplicarAjustes);
+try { const a = JSON.parse(localStorage.getItem('ajustes-condor') || '{}'); $('ajusteContraste').checked = !!a.contraste; $('ajusteTexto').checked = !!a.texto; aplicarAjustes(); } catch {}
 
 function bucle(t) {
   const dt = Math.min(0.05, (t - ultimo) / 1000 || 0); ultimo = t;
-  if (est === 'juego') actualizar(dt); else if (est === 'menu') tiempo += dt;
-  dibujar(); requestAnimationFrame(bucle);
+  if (est === 'juego' && modo === 'duo') {
+    for (let i = 0; i < 2; i++) if (!sesiones[i].terminado) { sesionActual = i; cargarSesion(sesiones[i]); actualizar(dt); sesiones[i] = guardarSesion(); }
+    sesionActual = 0; cargarSesion(sesiones[0]); dibujarDuo();
+  } else {
+    if (est === 'juego') actualizar(dt); else if (est === 'menu') tiempo += dt;
+    dibujar();
+  }
+  requestAnimationFrame(bucle);
 }
 ajustar(); crearMundo(3); actualizarHud(); mostrar('menu'); requestAnimationFrame(bucle);

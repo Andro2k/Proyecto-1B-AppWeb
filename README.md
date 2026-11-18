@@ -11,6 +11,13 @@ Integrantes: Jose Luis Andino, Richard Tipantiza, Rommel Rivera, Sebastian Chica
 Flechas o A/D: girar · Espacio o ↑: aletear (gasta energía) · ↓ o S: picada · P o Esc: pausa.
 Celular: arrastrar para girar, tocar para aletear, botón «Picada».
 
+## Modos de juego
+- Elige un jugador o dos jugadores en el menú e ingresa sus nombres.
+- En modo de dos jugadores, ambos vuelan al mismo tiempo en pantalla dividida y recorren sus propios niveles. Jugador 1 usa A/D/W/S; jugador 2 usa las flechas, Espacio y ↓.
+- Al terminar ambos recorridos, gana el puntaje más alto; los dos resultados se agregan a la tabla.
+- En pausa puedes consultar puntajes, logros, ajustes de contraste y tamaño de texto, enciclopedia o volver al menú.
+- La interfaz se adapta al tamaño de ventana y conserva formato panorámico 16:9, pensado para mostrarse a pantalla completa en un monitor grande.
+
 ## Estructura
 `app.py` (API `GET/POST /api/puntajes`) · `src/index.html` · `src/css/styles.css` · `src/javascript/datos.js` (datos con fuente, niveles, preguntas) · `src/javascript/main.js` (lógica y dibujo).
 

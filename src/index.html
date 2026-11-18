@@ -9,8 +9,9 @@
   <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <main class="juego">
+  <main id="juego" class="juego">
     <canvas id="lienzo" aria-label="Vuelo del cóndor en perspectiva"></canvas>
+    <div id="duoHud" class="duo-hud" hidden><div><strong id="duoNombre1">Jugador 1</strong><span id="duoPuntos1">0 pts</span></div><div><strong id="duoNombre2">Jugador 2</strong><span id="duoPuntos2">0 pts</span></div></div>
 
     <header class="hud-sup" aria-label="Estado del juego">
       <button id="btnPausa" type="button" class="btn-pausa" aria-label="Pausa">❚❚</button>
@@ -36,18 +37,20 @@
     </aside>
 
     <section id="menu" class="pantalla" aria-labelledby="tMenu">
-      <div class="tarjeta">
+      <div class="tarjeta tarjeta-inicio">
         <p class="etq">Aplicaciones Web · Grupo 02</p>
         <h1 id="tMenu">Guardianes del Cóndor</h1>
-        <p>Vuela como un cóndor andino: planea en térmicas, come carroña segura, esquiva cables y llega al nido en el risco.</p>
-        <ul class="controles">
-          <li><kbd>←</kbd><kbd>→</kbd> / <kbd>A</kbd><kbd>D</kbd> girar</li>
-          <li><kbd>Espacio</kbd> / <kbd>↑</kbd> aletear (gasta energía)</li>
-          <li><kbd>↓</kbd> / <kbd>S</kbd> picada para comer</li>
-          <li><kbd>P</kbd> / <kbd>Esc</kbd> pausa · Celular: arrastra para girar, toca para aletear</li>
-        </ul>
+        <p class="intro">Dos jugadores, un mismo vuelo. Compitan por guiar al cóndor hasta su nido y conseguir el mayor puntaje.</p>
+        <div class="jugadores-inicio">
+          <label>Jugador 1<input id="nombreJ1" maxlength="20" value="Jugador 1" aria-label="Nombre del jugador 1"></label>
+          <label id="campoJugador2">Jugador 2<input id="nombreJ2" maxlength="20" value="Jugador 2" aria-label="Nombre del jugador 2"></label>
+        </div>
+        <div class="ayuda-controles"><strong>Controles de vuelo</strong><span><kbd>A</kbd><kbd>D</kbd> girar · <kbd>W</kbd> aletear · <kbd>S</kbd> picada</span><span>Jugador 2: <kbd>←</kbd><kbd>→</kbd> girar · <kbd>Espacio</kbd> aletear · <kbd>↓</kbd> picada</span><span><kbd>P</kbd> pausa</span></div>
         <div class="acciones">
-          <button id="btnJugar" type="button" class="primario">Jugar</button>
+          <button id="btnSolo" type="button" class="primario">Un jugador</button>
+          <button id="btnDuo" type="button">Dos jugadores</button>
+          <button id="btnPuntajesMenu" type="button">Mejores puntajes</button>
+          <button id="btnLogrosMenu" type="button">Logros</button>
           <button id="btnEnciclo" type="button">Enciclopedia</button>
         </div>
       </div>
@@ -64,10 +67,15 @@
 
     <section id="pausa" class="pantalla" aria-labelledby="tPausa" hidden>
       <div class="tarjeta">
-        <h2 id="tPausa">Pausa</h2>
-        <div class="acciones">
-          <button id="btnReanudar" type="button" class="primario">Continuar</button>
+        <p class="etq">Partida en curso</p><h2 id="tPausa">Pausa</h2>
+        <p id="turnoPausa" class="turno-pausa"></p>
+        <div class="menu-pausa">
+          <button id="btnReanudar" type="button" class="primario">Continuar jugando</button>
+          <button id="btnPuntajesPausa" type="button">Ver puntajes</button>
+          <button id="btnLogrosPausa" type="button">Ver logros</button>
+          <button id="btnAjustes" type="button">Ajustes</button>
           <button id="btnEncicloPausa" type="button">Enciclopedia</button>
+          <button id="btnMenuPausa" type="button">Salir al menú</button>
         </div>
       </div>
     </section>
@@ -85,14 +93,14 @@
     <section id="fin" class="pantalla" aria-labelledby="finTitulo" hidden>
       <div class="tarjeta">
         <h2 id="finTitulo"></h2>
+        <p id="finSubtitulo"></p>
         <p>Puntos: <strong id="finPuntos">0</strong> · Estrellas: <strong id="finEstrellas">0</strong> · Datos: <strong id="finDatos">0</strong></p>
         <p id="finMensaje"></p>
         <div class="acciones">
-          <input id="nombre" type="text" maxlength="20" placeholder="Tu nombre" aria-label="Tu nombre">
-          <button id="btnGuardar" type="button">Guardar puntaje</button>
+          <button id="btnGuardar" type="button" hidden>Guardar puntajes</button>
         </div>
         <ol id="listaPuntajes" class="puntajes"></ol>
-        <button id="btnReiniciar" type="button" class="primario">Jugar de nuevo</button>
+        <button id="btnReiniciar" type="button" class="primario">Jugar otra partida</button>
       </div>
     </section>
   </main>
@@ -105,6 +113,22 @@
     <h2 id="tEnc">Enciclopedia del cóndor</h2>
     <ul id="listaEnc" class="enciclo"></ul>
     <form method="dialog"><button class="primario">Cerrar</button></form>
+  </dialog>
+
+  <dialog id="panelPuntajes" aria-labelledby="tPuntajes">
+    <h2 id="tPuntajes">Mejores puntajes</h2><ol id="puntajesGlobales" class="puntajes"></ol>
+    <form method="dialog"><button class="primario">Volver</button></form>
+  </dialog>
+  <dialog id="panelLogros" aria-labelledby="tLogros">
+    <h2 id="tLogros">Logros de la partida</h2><ul id="listaLogros" class="logros"></ul>
+    <form method="dialog"><button class="primario">Volver</button></form>
+  </dialog>
+  <dialog id="panelAjustes" aria-labelledby="tAjustes">
+    <h2 id="tAjustes">Ajustes</h2>
+    <label class="ajuste"><input id="ajusteContraste" type="checkbox"> Alto contraste</label>
+    <label class="ajuste"><input id="ajusteTexto" type="checkbox"> Texto grande</label>
+    <p>Las preferencias se guardan en este dispositivo.</p>
+    <form method="dialog"><button class="primario">Listo</button></form>
   </dialog>
 
   <script src="javascript/datos.js"></script>
