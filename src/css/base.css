@@ -1,0 +1,19 @@
+/* Variables, reinicio, tipografía base, lienzo y controles comunes. */
+:root {
+  --noche: #121c24; --pizarra: #1e2b36; --crema: #f3efe3; --oro: #e0b24f;
+  --ocre: #8a6a1f; --verde: #8bc34a; --rojo: #d9534f; --texto: #f3efe3;
+}
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; gap: .5rem; padding: .5rem;
+  background: var(--noche); color: var(--texto); font-family: "Segoe UI", system-ui, sans-serif; }
+h1, h2 { font-family: Impact, "Arial Black", sans-serif; letter-spacing: .03em; text-transform: uppercase; margin: .2rem 0 .6rem; }
+.etq { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--oro); }
+
+
+.juego { position: relative; width: min(100%, calc((100vh - 4.2rem) * 16 / 9)); margin: auto; border-radius: 14px; overflow: hidden; background: #000; box-shadow: 0 16px 55px #0008; }
+#lienzo { display: block; width: 100%; aspect-ratio: 16 / 9; max-height: calc(100vh - 4.2rem); touch-action: none; }
+button, input { font: inherit; padding: .55rem 1rem; border-radius: 8px; border: 2px solid var(--noche); background: transparent; color: inherit; cursor: pointer; }
+input { cursor: text; background: #fff; }
+button.primario { background: var(--oro); color: var(--noche); font-weight: 700; }
+button:focus-visible, input:focus-visible { outline: 3px solid #2d7ff9; outline-offset: 2px; }
+.pie button { color: var(--crema); border-color: var(--oro); }

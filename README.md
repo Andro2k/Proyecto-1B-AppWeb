@@ -19,7 +19,7 @@ Celular: arrastrar para girar, tocar para aletear, botón «Picada».
 - La interfaz se adapta al tamaño de ventana y conserva formato panorámico 16:9, pensado para mostrarse a pantalla completa en un monitor grande.
 
 ## Estructura
-`app.py` (API `GET/POST /api/puntajes`) · `src/index.html` · `src/css/styles.css` · `src/javascript/datos.js` (datos con fuente, niveles, preguntas) · `src/javascript/main.js` (lógica y dibujo).
+`app.py` (API `GET/POST /api/puntajes`) · `src/index.html` · `src/css/*.css` · `src/javascript/` (módulos ES, ver abajo).
 
 ## Créditos
 Gráficos dibujados por código (sin imágenes externas). Fuentes de los datos: ver `datos.js`.

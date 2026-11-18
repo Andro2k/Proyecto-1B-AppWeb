@@ -1,0 +1,44 @@
+/* Pantallas superpuestas: menú, tarjetas, pausa, preguntas y fin. */
+.pantalla { position: absolute; z-index: 5; inset: 0; display: grid; place-items: center; padding: 1rem; background: rgba(10, 16, 22, .78); }
+.pantalla[hidden], .aviso[hidden] { display: none; }
+.tarjeta { background: var(--crema); color: var(--noche); border-radius: 18px; padding: clamp(1.2rem, 2.5vw, 2.4rem); max-width: 720px; width: min(100%, 720px); max-height: 94%; overflow: auto; box-shadow: 0 18px 50px #0005; }
+.tarjeta-inicio { max-width: 900px; text-align: center; }
+.tarjeta-inicio h1 { font-size: clamp(2.3rem, 5vw, 4.7rem); line-height: 1; margin: .35em 0; }
+.intro { max-width: 660px; margin: 0 auto 1.3rem; font-size: clamp(1rem, 1.6vw, 1.35rem); line-height: 1.5; }
+.jugadores-inicio { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin: 1.2rem auto; max-width: 640px; text-align: left; }
+.jugadores-inicio label { display: grid; gap: .4rem; font-weight: 700; }
+.jugadores-inicio input { width: 100%; }
+.ayuda-controles { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: .55rem 1.2rem; padding: .8rem; background: #e5dfcf; border-radius: 10px; font-size: .95rem; }
+.ayuda-controles strong { flex-basis: 100%; }
+.tarjeta-inicio .acciones { justify-content: center; margin-top: 1.3rem; }
+.tarjeta-inicio button { min-height: 48px; }
+.tarjeta .etq { color: var(--ocre); }
+.controles { padding-left: 1.1rem; line-height: 1.8; font-size: .9rem; }
+kbd { background: var(--noche); color: var(--crema); border-radius: 4px; padding: 0 .4rem; margin: 0 .1rem; font-size: .8rem; }
+.acciones { display: flex; gap: .6rem; flex-wrap: wrap; margin: .8rem 0; }
+.menu-pausa { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin-top: 1rem; }
+.menu-pausa button { min-height: 52px; font-weight: 650; }
+.menu-pausa button:first-child { grid-column: 1 / -1; }
+.turno-pausa { color: #536151; font-weight: 650; }
+.opciones { display: grid; gap: .5rem; margin: .8rem 0; }
+.opciones button.ok { background: #b9e08f; } .opciones button.mal { background: #f2b3b0; }
+
+
+.puntajes { padding-left: 1.2rem; font-size: .9rem; }
+.pie { display: flex; gap: .6rem; justify-content: center; }
+/* Menú cinematográfico sobre el paisaje del juego */
+#menu.pantalla { place-items: center start; padding: clamp(1.2rem, 5vw, 4rem); background: linear-gradient(90deg, rgba(9,17,18,.91) 0%, rgba(9,17,18,.76) 38%, rgba(9,17,18,.12) 100%); }
+#menu .tarjeta-inicio { width: min(520px, 52vw); max-width: 520px; padding: 0; background: transparent; color: #fff; box-shadow: none; text-align: left; overflow: visible; }
+#menu .tarjeta-inicio h1 { font-family: Impact, "Arial Narrow", sans-serif; font-size: clamp(3.6rem, 7.5vw, 7rem); letter-spacing: .045em; line-height: .92; text-shadow: 0 3px 22px #0009; }
+#menu .tarjeta-inicio .etq { color: #f1c177; }
+#menu .intro { margin: 1.1rem 0; font-size: clamp(1rem, 1.4vw, 1.25rem); color: #f1eee5; }
+#menu .jugadores-inicio { margin: .8rem 0; max-width: 480px; }
+#menu .jugadores-inicio label { color: #f3efe3; }
+#menu .jugadores-inicio input { background: rgba(9,17,18,.82); border-color: rgba(243,239,227,.55); color: #fff; }
+#menu .ayuda-controles { justify-content: flex-start; padding: 0; background: transparent; color: #eee; font-size: .85rem; }
+#menu .ayuda-controles strong { color: #f1c177; }
+#menu .acciones { display: grid; width: min(320px, 100%); gap: .35rem; margin-top: 1.3rem; }
+#menu .acciones button { min-height: 44px; border: 0; border-radius: 2px; background: rgba(0,0,0,.78); color: white; text-align: left; padding-inline: 1.25rem; font-weight: 650; }
+#menu .acciones button:hover, #menu .acciones button:focus-visible { background: #f1c177; color: #101717; }
+#menu .acciones button.primario { background: #f1c177; color: #101717; }
+#menu .acciones button.primario:hover { background: #ffdb9a; }
