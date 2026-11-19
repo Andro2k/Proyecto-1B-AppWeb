@@ -7,3 +7,11 @@ export const PREGUNTAS = [
   { q: '¿Cuál fue la principal causa de cóndores heridos o muertos en el norte de Sudamérica (1979–2021)?', ops: ['El veneno', 'Las tormentas', 'La falta de agua'], ok: 0,
     expl: 'El veneno causó el 63 % de los casos registrados (Restrepo-Cardona et al., 2022).' }
 ];
+PREGUNTAS.push(
+  { q: '¿Cómo se reconoce a la cóndor hembra?', ops: ['Tiene una gran cresta en la cabeza', 'No tiene cresta y sus ojos son rojizos', 'Es más grande que el macho'], ok: 1,
+    expl: 'El macho tiene cresta y ojos pardos; la hembra no tiene cresta, sus ojos son rojizos y es algo más pequeña (Andean condor, Wikipedia).' },
+  { q: '¿Cuántos huevos pone un cóndor andino cada dos años?', ops: ['Uno', 'Cinco', 'Diez'], ok: 0,
+    expl: 'Pone un solo huevo cada dos años y lo incuba de 54 a 58 días: cada cóndor cuenta.' },
+  { q: '¿Qué debes hacer si ves a alguien poniendo veneno o cazando cóndores?', ops: ['Avisar a un guardaparque o a una autoridad', 'No hacer nada', 'Quedarte con sus plumas'], ok: 0,
+    expl: 'Envenenar o cazar daña a una especie en peligro. Lo correcto es avisar a un guardaparque o a las autoridades.' }
+);

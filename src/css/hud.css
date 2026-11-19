@@ -9,9 +9,9 @@
 .hud-camino { text-align: center; }
 .hud-datos { display: flex; gap: 1rem; margin: 0; padding: .35rem .8rem; background: rgba(16, 27, 36, .72); border: var(--borde) solid var(--crema); text-align: center; }
 .hud-datos dt { font-size: .75rem; color: var(--oro); font-weight: 700; }
-.hud-datos dd { margin: 0; font: 700 1.1rem var(--f-titulo); }
+.hud-datos dd { margin: 0; font: 700 1.1rem var(--f-pixel); }
 .hud-energia, .hud-lado { text-align: center; }
-.hud-lado strong { font: 700 1.5rem var(--f-titulo); }
+.hud-lado strong { font: 700 1.5rem var(--f-pixel); }
 .barra { height: 1rem; background: rgba(11, 18, 23, .8); border: var(--borde) solid var(--crema); overflow: hidden; }
 #barEnergia { height: 100%; width: 100%; background: var(--verde); transition: width .15s; }
 #barEnergia.baja { background: var(--rojo); }
@@ -29,7 +29,7 @@
 .duo-hud > div { display: flex; flex-direction: column; padding: .6rem 1rem; background: linear-gradient(#0b1218cc, #0b121800); }
 .duo-hud > div:last-child { align-items: flex-end; text-align: right; }
 .duo-hud strong { color: var(--oro); font: 700 1.2rem var(--f-titulo); }
-.duo-hud span { font: 700 1.1rem var(--f-titulo); }
+.duo-hud span { font: 700 1.1rem var(--f-pixel); }
 
 /* Datos curiosos: legibles y con tiempo para leer */
 .aviso { position: absolute; z-index: 3; top: 4.6rem; left: 50%; transform: translateX(-50%); width: min(40rem, 86%);

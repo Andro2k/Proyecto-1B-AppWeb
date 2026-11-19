@@ -10,6 +10,7 @@ import { instalarTactil } from './entrada/tactil.js';
 import { abrir, dibujarEnciclopedia, dibujarLogros, iniciarAjustes } from './ui/dialogos.js';
 import { crearEscenaMenu } from './render/escena_menu.js';
 import * as ui from './ui/pantallas.js';
+import { crearMapa } from './ui/mapa.js';
 
 const lienzo = $('lienzo'), g = lienzo.getContext('2d');
 const menu = crearEscenaMenu($('escenaMenu'));
@@ -31,14 +32,18 @@ instalarTactil(lienzo, $('btnPica'), { mundo: partida.mundoPrincipal });
 const clic = (id, f) => $(id).addEventListener('click', f);
 const abrirEnciclopedia = () => {
   if (partida.estado() === 'juego') partida.alternarPausa();
-  dibujarEnciclopedia(partida.mundoPrincipal().descubiertos); abrir('enciclopedia');
+  dibujarEnciclopedia(partida.descubiertos()); abrir('enciclopedia');
 };
 const abrirPuntajes = async () => { await partida.mostrarPuntajes(); abrir('panelPuntajes'); };
-const abrirLogros = () => { dibujarLogros(partida.mundoPrincipal().descubiertos); abrir('panelLogros'); };
+const abrirLogros = () => { dibujarLogros(partida.descubiertos()); abrir('panelLogros'); };
 
 /* Menú de inicio: Nuevo juego → número de jugadores → nombres → vuelo */
 let modoElegido = 'solo';
 clic('btnNuevo', () => ui.submenu('menuModo'));
+clic('btnContinuar', partida.continuar);
+crearMapa(partida.elegirNivel);
+clic('btnMapaAtras', partida.salirAlMenu);
+clic('btnReintentar', partida.reintentar); clic('btnDerrotaMapa', partida.derrotaAlMapa); clic('btnTerminar', partida.terminarPartida);
 clic('btnVolverModo', () => ui.submenu('menuPrincipal'));
 clic('btnUn', () => { modoElegido = 'solo'; ui.pedirNombres(false); });
 clic('btnDos', () => { modoElegido = 'duo'; ui.pedirNombres(true); });

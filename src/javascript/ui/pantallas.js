@@ -5,7 +5,7 @@ import { NIVELES } from '../datos/niveles.js';
 import { VIDAS } from '../config.js';
 import { focoInicial } from '../entrada/navegacion.js';
 
-const PANTALLAS = ['menu', 'nombres', 'despedida', 'nivelIntro', 'pausa', 'pregunta', 'fin'];
+const PANTALLAS = ['menu', 'nombres', 'despedida', 'mapa', 'nivelIntro', 'pausa', 'pregunta', 'derrota', 'fin'];
 /** Muestra una pantalla (o ninguna: null = en vuelo). Mueve el foco para poder navegar sin ratón. */
 export function mostrar(id) {
   for (const s of PANTALLAS) $(s).hidden = s !== id;
@@ -45,7 +45,7 @@ export function hud(m) {
   corazones($('vidas'), p.vidas);
   $('puntos').textContent = Math.round(m.puntos);
   $('nivel').textContent = (m.nivel + 1) + '/' + NIVELES.length;
-  $('altitud').textContent = Math.round(3800 + p.y * 40) + ' m';
+  $('altitud').textContent = Math.round((cfg.alt ?? 3800) + p.y * 40) + ' m';
   $('datos').textContent = m.descubiertos.size + '/' + Object.keys(DATOS).length;
   $('barProgreso').style.width = clamp(p.z / cfg.largo * 100, 0, 100) + '%';
 }
@@ -74,6 +74,8 @@ export function respuesta(q, elegida, ok, estrellas) {
   $('explicacion').hidden = false; $('btnSigue').hidden = false;
 }
 
+export function derrota(texto) { $('derrotaTexto').textContent = texto; mostrar('derrota'); }
+
 export function pausa(texto) { $('turnoPausa').textContent = texto; mostrar('pausa'); }
 
 export function leerNombres() { return [$('nombreJ1').value.trim() || 'Jugador 1', $('nombreJ2').value.trim() || 'Jugador 2']; }
@@ -96,7 +98,9 @@ export function pantallaFin({ titulo, subtitulo, puntos, estrellas, datos, mensa
   mostrar('fin');
 }
 
-export function restablecerMenu() {
+export function restablecerMenu(hayProgreso = false) {
   $('juego').classList.remove('modo-duo'); $('duoHud').hidden = true; $('btnPica').hidden = false;
+  $('btnContinuar').disabled = !hayProgreso;
+  if (hayProgreso) $('btnContinuar').dataset.foco = ''; else delete $('btnContinuar').dataset.foco;   // si hay partida, el foco inicial es «Continuar»
   mostrar('menu'); submenu('menuPrincipal');
 }

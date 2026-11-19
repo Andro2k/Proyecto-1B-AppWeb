@@ -8,8 +8,9 @@
 :root {
   --tinta: #0b1218; --noche: #101b24; --pizarra: #1b2a35; --crema: #f6f1e1; --oro: #f2c14e;
   --rojo: #e4572e; --verde: #8fd36b; --hielo: #bfe3f5;
-  --f-titulo: "Pixelify Sans", "Courier New", monospace;
+  --f-pixel: "Pixelify Sans", "Courier New", monospace;          /* solo logotipo, menú y cifras: la «C» se parece a una «O» en tamaños pequeños */
   --f-texto: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --f-titulo: var(--f-texto);
   --borde: .16rem;
   --sombra-texto: 0 .1rem 0 #000, 0 0 .5rem #000;
 }

@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/pantallas.css">
   <link rel="stylesheet" href="css/menu.css">
+  <link rel="stylesheet" href="css/mapa.css">
   <link rel="stylesheet" href="css/dialogos.css">
   <link rel="stylesheet" href="css/hud.css">
   <link rel="stylesheet" href="css/responsive.css">
@@ -50,6 +51,7 @@
       <h1 class="logo" id="tMenu"><span>Guardianes del</span>Cóndor</h1>
       <nav id="menuPrincipal" class="menu-lista" aria-label="Menú principal">
         <button id="btnNuevo" type="button">Nuevo juego</button>
+        <button id="btnContinuar" type="button" disabled>Continuar</button>
         <button id="btnPuntajesMenu" type="button">Puntajes</button>
         <button id="btnSalir" type="button">Salir</button>
       </nav>
@@ -77,6 +79,37 @@
 
     <section id="despedida" class="pantalla" aria-label="Despedida" hidden>
       <div class="tarjeta"><h2>¡Hasta pronto!</h2><p>Gracias por cuidar a los cóndores.</p><button id="btnRegresar" type="button" class="primario" data-foco>Volver al inicio</button></div>
+    </section>
+
+    <section id="mapa" class="pantalla" aria-label="Mapa de Ecuador">
+      <div class="mapa-cuerpo">
+        <div class="mapa-zona"><div id="mapaLienzo"></div></div>
+        <aside class="mapa-info panel" aria-live="polite">
+          <div class="info-izq">
+            <p class="etq" id="mapaProvincia"></p>
+            <h2 id="mapaNombre"></h2>
+            <p id="mapaTexto"></p>
+          </div>
+          <div class="info-der">
+            <ul id="mapaPeligros" class="peligros"></ul>
+            <div id="mapaRecord"></div>
+            <p id="mapaTotal" class="mapa-total"></p>
+            <button id="btnMapaAtras" type="button" data-atras>Menú</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="derrota" class="pantalla" aria-labelledby="tDerrota" hidden>
+      <div class="tarjeta">
+        <h2 id="tDerrota">El cóndor necesita descansar</h2>
+        <p id="derrotaTexto"></p>
+        <div class="menu-pausa">
+          <button id="btnReintentar" type="button" class="primario" data-foco>Reintentar</button>
+          <button id="btnDerrotaMapa" type="button">Ver el mapa</button>
+          <button id="btnTerminar" type="button">Terminar partida</button>
+        </div>
+      </div>
     </section>
 
     <section id="nivelIntro" class="pantalla" aria-labelledby="tNivel" hidden>
