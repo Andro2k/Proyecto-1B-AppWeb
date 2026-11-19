@@ -10,12 +10,12 @@ import { instalarTactil } from './entrada/tactil.js';
 import { abrir, dibujarEnciclopedia, dibujarLogros, iniciarAjustes } from './ui/dialogos.js';
 
 const lienzo = $('lienzo'), g = lienzo.getContext('2d');
-const vista = { W: 1, H: 1, F: 1, HOR: 1 };   // tamaño en píxeles, foco y horizonte
+const vista = { W: 1, H: 1, HOR: 1 };   // tamaño en píxeles y horizonte (el foco se calcula por vista)
 
 function ajustar() {
   const r = lienzo.getBoundingClientRect(), d = window.devicePixelRatio || 1;
   lienzo.width = Math.max(1, r.width * d); lienzo.height = Math.max(1, r.height * d);
-  vista.W = lienzo.width; vista.H = lienzo.height; vista.F = vista.H * 0.9; vista.HOR = vista.H * 0.36;
+  vista.W = lienzo.width; vista.H = lienzo.height; vista.HOR = vista.H * 0.36;
 }
 window.addEventListener('resize', ajustar);
 

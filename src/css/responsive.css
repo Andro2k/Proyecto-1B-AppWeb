@@ -1,15 +1,9 @@
-/* Ajustes para pantallas pequeñas. */
-@media (max-width: 600px) {
-  body { padding: .25rem; }
-  .juego { width: 100%; border-radius: 8px; }
-  .jugadores-inicio { grid-template-columns: 1fr; }
-  .menu-pausa { grid-template-columns: 1fr; }
+/* Pantallas pequeñas (teléfono): se reduce la escala base y se simplifica el HUD. */
+@media (max-width: 700px), (max-height: 520px) {
+  html { font-size: clamp(14px, 3.4vmin, 22px); }
+  .menu-pausa, .jugadores-inicio { grid-template-columns: 1fr; }
   .menu-pausa button:first-child { grid-column: auto; }
-  #menu.pantalla { place-items: center; padding: 1rem; background: rgba(9,17,18,.82); }
   #menu .tarjeta-inicio { width: 100%; }
-  #menu .tarjeta-inicio h1 { font-size: clamp(3rem, 15vw, 5rem); }
-  .tarjeta { padding: .9rem 1rem; }
-  .hud-sup, .hud-inf { padding: .4rem; gap: .4rem; } .hud-inf { gap: .6rem; }
-  .hud-datos { gap: .4rem; padding: .2rem .35rem; font-size: .75rem; } .hud-lado { min-width: 48px; font-size: .9rem; }
-  .aviso { top: 3.2rem; width: 92%; }
+  .hud-sup { grid-template-columns: auto 1fr; } .hud-datos { display: none; }
+  .aviso { top: 3.6rem; }
 }

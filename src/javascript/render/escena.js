@@ -17,10 +17,13 @@ function actualizarCamara(m) {
   cam.z = p.z - CAM_ATRAS; cam.x += (p.x * 0.75 - cam.x) * 0.08; cam.y += (p.y * 0.85 + 3 - cam.y) * 0.1;
 }
 
-/** Dibuja un mundo en la vista { W, H, F, HOR }. */
+/** Foco de la cámara: se limita por el ancho para que el carril de vuelo quepa en pantallas 5:4 o verticales. */
+const foco = (W, H) => Math.min(H * 0.9, W * 0.85);
+
+/** Dibuja un mundo en la vista { W, H, HOR }. */
 export function dibujarMundo(g, m, vista) {
   actualizarCamara(m);
-  const c = { g, ...vista, cam: m.cam, t: m.tiempo };
+  const c = { g, ...vista, F: foco(vista.W, vista.H), cam: m.cam, t: m.tiempo };
   dibFondo(c); dibSuelo(c);
   // Solo las entidades en pantalla (lista ordenada por z), de lejos a cerca; las dinámicas se intercalan por profundidad.
   const lo = primerIndice(m.ents, m.cam.z - 25), hi = primerIndice(m.ents, m.cam.z + 235);

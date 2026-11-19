@@ -46,7 +46,7 @@ export function dibujarPuntajes(lista) {
 export function iniciarAjustes() {
   const aplicar = () => {
     document.body.classList.toggle('alto-contraste', $('ajusteContraste').checked);
-    document.body.classList.toggle('texto-grande', $('ajusteTexto').checked);
+    document.documentElement.classList.toggle('texto-grande', $('ajusteTexto').checked);
     localStorage.setItem('ajustes-condor', JSON.stringify({ contraste: $('ajusteContraste').checked, texto: $('ajusteTexto').checked }));
   };
   $('ajusteContraste').addEventListener('change', aplicar); $('ajusteTexto').addEventListener('change', aplicar);

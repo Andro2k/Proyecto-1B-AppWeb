@@ -4,8 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Guardianes del Cóndor · Grupo 02</title>
+  <link rel="preload" href="fonts/pixelify-sans-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="fonts/atkinson-hyperlegible-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
-  <meta name="theme-color" content="#121c24">
+  <meta name="theme-color" content="#0b1218">
   <link rel="stylesheet" href="css/base.css">
   <link rel="stylesheet" href="css/pantallas.css">
   <link rel="stylesheet" href="css/dialogos.css">
@@ -31,10 +33,12 @@
     </header>
 
     <footer class="hud-inf" aria-label="Energía, vidas y puntos">
-      <div class="hud-lado"><span class="etq">Vidas</span><strong id="vidas" class="vidas">♥♥♥</strong></div>
+      <div class="hud-lado"><span class="etq">Vidas</span><strong id="vidas" class="vidas" aria-label="Vidas"></strong></div>
       <div class="hud-energia"><span class="etq">Energía</span><div class="barra"><div id="barEnergia"></div></div></div>
       <div class="hud-lado"><span class="etq">Puntos</span><strong id="puntos">0</strong></div>
     </footer>
+
+    <button id="btnPica" type="button" class="btn-pica">Picada ↓</button>
 
     <aside id="aviso" class="aviso" role="status" aria-live="polite" hidden>
       <h2 id="avisoTitulo"></h2><p id="avisoTexto"></p><small id="avisoFuente"></small>
@@ -105,10 +109,6 @@
       </div>
     </section>
   </main>
-
-  <footer class="pie">
-    <button id="btnPica" type="button">Picada ↓</button>
-  </footer>
 
   <dialog id="enciclopedia" aria-labelledby="tEnc">
     <h2 id="tEnc">Enciclopedia del cóndor</h2>

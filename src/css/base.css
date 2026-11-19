@@ -1,19 +1,50 @@
-/* Variables, reinicio, tipografía base, lienzo y controles comunes. */
+/* Variables, tipografía, reinicio y controles comunes.
+   Diseñado para un monitor de 19" visto a ~1 m: la escala de texto sigue al lado menor de la ventana (vmin). */
+@font-face { font-family: "Pixelify Sans"; font-weight: 700; font-display: swap; src: url("../fonts/pixelify-sans-latin-700-normal.woff2") format("woff2"); }
+@font-face { font-family: "Pixelify Sans"; font-weight: 400; font-display: swap; src: url("../fonts/pixelify-sans-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 400; font-display: swap; src: url("../fonts/atkinson-hyperlegible-latin-400-normal.woff2") format("woff2"); }
+@font-face { font-family: "Atkinson Hyperlegible"; font-weight: 700; font-display: swap; src: url("../fonts/atkinson-hyperlegible-latin-700-normal.woff2") format("woff2"); }
+
 :root {
-  --noche: #121c24; --pizarra: #1e2b36; --crema: #f3efe3; --oro: #e0b24f;
-  --ocre: #8a6a1f; --verde: #8bc34a; --rojo: #d9534f; --texto: #f3efe3;
+  --tinta: #0b1218; --noche: #101b24; --pizarra: #1b2a35; --crema: #f6f1e1; --oro: #f2c14e;
+  --rojo: #e4572e; --verde: #8fd36b; --hielo: #bfe3f5;
+  --f-titulo: "Pixelify Sans", "Courier New", monospace;
+  --f-texto: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --borde: .16rem;
+  --sombra-texto: 0 .1rem 0 #000, 0 0 .5rem #000;
 }
+/* 1 rem ≈ 25 px en 1366×768 y ≈ 36 px en 1280×1024: el cuerpo de texto mide ≥ 7 mm a 1 m en un 19". */
+html { font-size: clamp(24px, 3.5vmin, 48px); height: 100%; }
+body.alto-contraste { --crema: #fff; --oro: #ffd338; --noche: #000; --pizarra: #111; }
+html.texto-grande { font-size: clamp(28px, 4.2vmin, 56px); }
+
 * { box-sizing: border-box; }
-body { margin: 0; min-height: 100vh; display: flex; flex-direction: column; gap: .5rem; padding: .5rem;
-  background: var(--noche); color: var(--texto); font-family: "Segoe UI", system-ui, sans-serif; }
-h1, h2 { font-family: Impact, "Arial Black", sans-serif; letter-spacing: .03em; text-transform: uppercase; margin: .2rem 0 .6rem; }
-.etq { font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--oro); }
+body { margin: 0; height: 100%; overflow: hidden; background: var(--tinta); color: var(--crema);
+  font: 400 1rem/1.45 var(--f-texto); -webkit-font-smoothing: antialiased; }
+h1, h2 { font-family: var(--f-titulo); font-weight: 700; line-height: 1.05; margin: 0 0 .5em; letter-spacing: .02em; }
+h2 { font-size: 1.7rem; color: var(--oro); }
+p { margin: 0 0 .7em; }
+.etq { font-size: .8rem; letter-spacing: .04em; color: var(--hielo); }
+kbd { font: 700 .85em var(--f-titulo); background: var(--crema); color: var(--tinta); padding: 0 .4em; margin: 0 .1em; }
 
+/* El juego ocupa toda la ventana del navegador */
+.juego { position: fixed; inset: 0; overflow: hidden; background: #000; }
+#lienzo { display: block; width: 100%; height: 100%; touch-action: none; }
 
-.juego { position: relative; width: min(100%, calc((100vh - 4.2rem) * 16 / 9)); margin: auto; border-radius: 14px; overflow: hidden; background: #000; box-shadow: 0 16px 55px #0008; }
-#lienzo { display: block; width: 100%; aspect-ratio: 16 / 9; max-height: calc(100vh - 4.2rem); touch-action: none; }
-button, input { font: inherit; padding: .55rem 1rem; border-radius: 8px; border: 2px solid var(--noche); background: transparent; color: inherit; cursor: pointer; }
-input { cursor: text; background: #fff; }
-button.primario { background: var(--oro); color: var(--noche); font-weight: 700; }
-button:focus-visible, input:focus-visible { outline: 3px solid #2d7ff9; outline-offset: 2px; }
-.pie button { color: var(--crema); border-color: var(--oro); }
+/* Panel con borde doble estilo pixel-art */
+.panel, .tarjeta, dialog {
+  background: var(--noche); color: var(--crema); border: var(--borde) solid var(--crema); border-radius: 0;
+  box-shadow: 0 0 0 var(--borde) var(--tinta), .45rem .45rem 0 var(--borde) rgba(0, 0, 0, .55);
+}
+
+button, input { font: inherit; border-radius: 0; }
+button { font: 700 1rem/1.1 var(--f-titulo); min-height: 2.7rem; padding: .55em 1.1em; cursor: pointer;
+  background: var(--pizarra); color: var(--crema); border: var(--borde) solid var(--crema); }
+button:hover, button:focus-visible { background: var(--oro); color: var(--tinta); border-color: var(--tinta); }
+button.primario { background: var(--oro); color: var(--tinta); border-color: var(--tinta); }
+button.primario:hover, button.primario:focus-visible { background: #ffe08a; }
+button:disabled { opacity: .55; cursor: default; }
+input { background: var(--crema); color: var(--tinta); border: var(--borde) solid var(--tinta); padding: .4em .7em; min-height: 2.7rem; font-family: var(--f-texto); font-weight: 700; }
+:is(button, input):focus-visible { outline: .2rem solid var(--hielo); outline-offset: .2rem; }
+
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }

@@ -2,6 +2,7 @@
 import { $, clamp } from '../util.js';
 import { DATOS } from '../datos/datos.js';
 import { NIVELES } from '../datos/niveles.js';
+import { VIDAS } from '../config.js';
 
 const PANTALLAS = ['menu', 'nivelIntro', 'pausa', 'pregunta', 'fin'];
 export const mostrar = id => { for (const s of PANTALLAS) $(s).hidden = s !== id; };
@@ -11,14 +12,23 @@ export function aviso(titulo, texto, fuente = '') {
   $('avisoTitulo').textContent = titulo; $('avisoTexto').textContent = texto;
   $('avisoFuente').textContent = fuente ? 'Fuente: ' + fuente : '';
   $('aviso').hidden = false; clearTimeout(avisoT);
-  avisoT = setTimeout(() => { $('aviso').hidden = true; }, 8000);
+  avisoT = setTimeout(() => { $('aviso').hidden = true; }, 9000);
+}
+
+/** Dibuja los corazones solo cuando cambian las vidas (evita reconstruir el DOM en cada fotograma). */
+function corazones(el, vidas) {
+  const v = Math.max(0, vidas);
+  if (el.dataset.vidas === String(v)) return;
+  el.dataset.vidas = v; el.replaceChildren();
+  for (let i = 0; i < VIDAS; i++) { const c = document.createElement('i'); c.className = i < v ? 'corazon' : 'corazon vacio'; el.append(c); }
+  el.setAttribute('aria-label', v + ' de ' + VIDAS + ' vidas');
 }
 
 export function hud(m) {
   const { p, cfg } = m;
   $('barEnergia').style.width = p.energia + '%';
   $('barEnergia').classList.toggle('baja', p.energia < 25);
-  $('vidas').textContent = '♥'.repeat(Math.max(0, p.vidas)) + '♡'.repeat(Math.max(0, 3 - p.vidas));
+  corazones($('vidas'), p.vidas);
   $('puntos').textContent = Math.round(m.puntos);
   $('nivel').textContent = (m.nivel + 1) + '/' + NIVELES.length;
   $('altitud').textContent = Math.round(3800 + p.y * 40) + ' m';
