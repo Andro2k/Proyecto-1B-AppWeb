@@ -8,14 +8,18 @@ import { dibujarMundo, dibujarDuo } from './render/escena.js';
 import { instalarTeclado } from './entrada/teclado.js';
 import { instalarTactil } from './entrada/tactil.js';
 import { abrir, dibujarEnciclopedia, dibujarLogros, iniciarAjustes } from './ui/dialogos.js';
+import { crearEscenaMenu } from './render/escena_menu.js';
+import * as ui from './ui/pantallas.js';
 
 const lienzo = $('lienzo'), g = lienzo.getContext('2d');
+const menu = crearEscenaMenu($('escenaMenu'));
 const vista = { W: 1, H: 1, HOR: 1 };   // tamaño en píxeles y horizonte (el foco se calcula por vista)
 
 function ajustar() {
   const r = lienzo.getBoundingClientRect(), d = window.devicePixelRatio || 1;
   lienzo.width = Math.max(1, r.width * d); lienzo.height = Math.max(1, r.height * d);
   vista.W = lienzo.width; vista.H = lienzo.height; vista.HOR = vista.H * 0.36;
+  menu.ajustar();
 }
 window.addEventListener('resize', ajustar);
 
@@ -32,14 +36,26 @@ const abrirEnciclopedia = () => {
 const abrirPuntajes = async () => { await partida.mostrarPuntajes(); abrir('panelPuntajes'); };
 const abrirLogros = () => { dibujarLogros(partida.mundoPrincipal().descubiertos); abrir('panelLogros'); };
 
-clic('btnSolo', () => partida.nuevoJuego('solo')); clic('btnDuo', () => partida.nuevoJuego('duo'));
-clic('btnEnciclo', abrirEnciclopedia); clic('btnEncicloPausa', abrirEnciclopedia);
+/* Menú de inicio: Nuevo juego → número de jugadores → nombres → vuelo */
+let modoElegido = 'solo';
+clic('btnNuevo', () => ui.submenu('menuModo'));
+clic('btnVolverModo', () => ui.submenu('menuPrincipal'));
+clic('btnUn', () => { modoElegido = 'solo'; ui.pedirNombres(false); });
+clic('btnDos', () => { modoElegido = 'duo'; ui.pedirNombres(true); });
+clic('btnEmpezar', () => partida.nuevoJuego(modoElegido));
+clic('btnVolverNombres', () => { ui.mostrar('menu'); ui.submenu('menuModo'); });
+clic('btnAjustesMenu', () => abrir('panelAjustes'));
+clic('btnSalir', () => { if (document.fullscreenElement) document.exitFullscreen(); window.close(); ui.mostrar('despedida'); });
+clic('btnRegresar', () => { ui.mostrar('menu'); ui.submenu('menuPrincipal'); });
+clic('btnPantallaCompleta', () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()));
+$('nombres').addEventListener('keydown', e => { if (e.key === 'Enter' && e.target.localName === 'input') $('btnEmpezar').click(); });
+clic('btnEncicloPausa', abrirEnciclopedia);
 clic('btnVolar', partida.volar);
 clic('btnReanudar', partida.alternarPausa); clic('btnPausa', partida.alternarPausa);
 clic('btnSigue', partida.siguiente);
 clic('btnReiniciar', () => partida.nuevoJuego(partida.modo()));
 clic('btnPuntajesMenu', abrirPuntajes); clic('btnPuntajesPausa', abrirPuntajes);
-clic('btnLogrosMenu', abrirLogros); clic('btnLogrosPausa', abrirLogros);
+clic('btnLogrosPausa', abrirLogros);
 clic('btnAjustes', () => abrir('panelAjustes'));
 clic('btnMenuPausa', partida.salirAlMenu);
 iniciarAjustes();
@@ -49,7 +65,9 @@ let ultimo = 0;
 function bucle(t) {
   const dt = Math.min(0.05, (t - ultimo) / 1000 || 0); ultimo = t;
   partida.tick(dt);
-  if (partida.estado() === 'juego' && partida.modo() === 'duo') dibujarDuo(g, partida.mundos(), vista);
+  const est = partida.estado();
+  if (est === 'menu') menu.dibujar(t / 1000);
+  else if (est === 'juego' && partida.modo() === 'duo') dibujarDuo(g, partida.mundos(), vista);
   else dibujarMundo(g, partida.mundoPrincipal(), vista);
   requestAnimationFrame(bucle);
 }

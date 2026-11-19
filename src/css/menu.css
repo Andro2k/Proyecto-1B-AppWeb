@@ -1,0 +1,23 @@
+/* Menú de inicio: escena pixel-art de fondo, logotipo grande y solo las opciones necesarias. */
+#menu.pantalla { display: block; padding: 0; background: #0a1030; }
+#menu.pantalla[hidden] { display: none; }   /* display:block anularía el atributo hidden */
+#escenaMenu { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+
+.logo { position: absolute; left: 6vmin; top: 5vmin; margin: 0; font: 700 clamp(3rem, 15vmin, 11rem)/.9 var(--f-titulo); letter-spacing: .04em;
+  color: transparent; background: linear-gradient(#fff 52%, #b9d3f4 52%); -webkit-background-clip: text; background-clip: text;
+  filter: drop-shadow(.05em 0 0 #0d1738) drop-shadow(-.05em 0 0 #0d1738) drop-shadow(0 .05em 0 #0d1738) drop-shadow(0 -.05em 0 #0d1738) drop-shadow(.08em .1em 0 #0d1738); }
+.logo span { display: block; font-size: .28em; letter-spacing: .12em; margin-bottom: .25em; }
+
+.menu-lista { position: absolute; left: 6vmin; bottom: 9vmin; display: grid; gap: .2rem; }
+.menu-lista[hidden] { display: none; }
+.menu-lista button { position: relative; min-height: 0; padding: .3em .4em .3em 1.5em; background: none; border: 0; color: #fff; text-align: left;
+  font: 700 1.7rem/1.1 var(--f-titulo); letter-spacing: .08em; text-transform: uppercase; text-shadow: .1rem .1rem 0 #0d1738, -.06rem .06rem 0 #0d1738; }
+.menu-lista button::before { content: ""; position: absolute; left: .1em; top: 50%; width: .8em; height: .8em; margin-top: -.4em; background: var(--oro);
+  clip-path: polygon(0 0, 100% 50%, 0 100%); opacity: 0; }
+.menu-lista button:hover, .menu-lista button:focus-visible { background: none; color: var(--oro); outline: none; border: 0; }
+.menu-lista button:hover::before, .menu-lista button:focus-visible::before { opacity: 1; }
+.menu-lista button:disabled { opacity: .4; }
+
+.icono { position: absolute; right: 3vmin; bottom: 3vmin; width: 3rem; min-height: 3rem; padding: 0; background: rgba(11, 18, 24, .7); }
+.ico-engranaje { display: block; width: 1.6rem; height: 1.6rem; margin: auto; background: currentColor; -webkit-mask: var(--g) center / contain no-repeat; mask: var(--g) center / contain no-repeat;
+  --g: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 9 9' shape-rendering='crispEdges'%3E%3Cpath d='M4 0h1v1h1v1h1V1h1v1h-1v1h1v1h1v1H8v1H7v1h1v1H7V8H6V7H5v1H4V7H3v1H2V7h1V6H2V5H1V4h1V3H1V2h1v1h1V2h1z M4 3v1H3v1h1v1h1V5h1V4H5V3z' fill-rule='evenodd'/%3E%3C/svg%3E"); }

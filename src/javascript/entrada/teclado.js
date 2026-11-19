@@ -1,4 +1,5 @@
-/* Entrada por teclado. Traduce teclas a acciones de vuelo de cada jugador (tablas, no if/else). */
+/* Entrada por teclado. En vuelo traduce teclas a acciones de cada jugador; en menús mueve el foco (tablas, no if/else). */
+import { navegar } from './navegacion.js';
 const A = (accion) => [0, accion];
 const SOLO = {
   ArrowLeft: A('izq'), a: A('izq'), A: A('izq'), ArrowRight: A('der'), d: A('der'), D: A('der'),
@@ -10,6 +11,7 @@ const DUO = {
 };
 const TECLAS = { solo: SOLO, duo: DUO };
 const PAUSA = new Set(['Escape', 'p', 'P']);
+const NAV = { ArrowUp: 'arriba', ArrowDown: 'abajo', ArrowLeft: 'izquierda', ArrowRight: 'derecha' };
 
 /** api = { modo(), estado(), mundos(), pausa() } */
 export function instalarTeclado(api) {
@@ -19,6 +21,15 @@ export function instalarTeclado(api) {
     m.entrada[destino[1]] = activa;
     if (activa && api.estado() === 'juego') e.preventDefault();
   };
-  window.addEventListener('keydown', e => { if (PAUSA.has(e.key)) api.pausa(); else aplicar(e, true); });
+  window.addEventListener('keydown', e => {
+    const enVuelo = api.estado() === 'juego' || api.estado() === 'pausa';
+    if (PAUSA.has(e.key)) { if (enVuelo) api.pausa(); else if (e.key === 'Escape') navegar('atras'); return; }
+    if (!enVuelo || document.querySelector('dialog[open]')) {                       // menús y diálogos: navegación
+      const accion = NAV[e.key];
+      if (accion && !(e.target.localName === 'input' && (accion === 'izquierda' || accion === 'derecha'))) { e.preventDefault(); navegar(accion); }
+      return;
+    }
+    aplicar(e, true);
+  });
   window.addEventListener('keyup', e => aplicar(e, false));
 }

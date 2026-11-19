@@ -3,9 +3,23 @@ import { $, clamp } from '../util.js';
 import { DATOS } from '../datos/datos.js';
 import { NIVELES } from '../datos/niveles.js';
 import { VIDAS } from '../config.js';
+import { focoInicial } from '../entrada/navegacion.js';
 
-const PANTALLAS = ['menu', 'nivelIntro', 'pausa', 'pregunta', 'fin'];
-export const mostrar = id => { for (const s of PANTALLAS) $(s).hidden = s !== id; };
+const PANTALLAS = ['menu', 'nombres', 'despedida', 'nivelIntro', 'pausa', 'pregunta', 'fin'];
+/** Muestra una pantalla (o ninguna: null = en vuelo). Mueve el foco para poder navegar sin ratón. */
+export function mostrar(id) {
+  for (const s of PANTALLAS) $(s).hidden = s !== id;
+  if (id) focoInicial($(id)); else document.activeElement?.blur();   // en vuelo, el foco no debe capturar Espacio/Enter
+}
+
+/** Submenús del menú principal: 'menuPrincipal' | 'menuModo'. */
+export function submenu(id) {
+  for (const s of ['menuPrincipal', 'menuModo']) $(s).hidden = s !== id;
+  focoInicial($(id));
+}
+
+/** Pantalla de nombres para 1 o 2 jugadores. */
+export function pedirNombres(dos) { $('campoJugador2').hidden = !dos; mostrar('nombres'); }
 
 let avisoT = 0;
 export function aviso(titulo, texto, fuente = '') {
@@ -65,9 +79,6 @@ export function pausa(texto) { $('turnoPausa').textContent = texto; mostrar('pau
 export function leerNombres() { return [$('nombreJ1').value.trim() || 'Jugador 1', $('nombreJ2').value.trim() || 'Jugador 2']; }
 
 export function configurarModo(modo, nombres) {
-  $('campoJugador2').hidden = modo === 'solo';
-  $('btnSolo').classList.toggle('primario', modo === 'solo'); $('btnDuo').classList.toggle('primario', modo === 'duo');
-  $('btnSolo').setAttribute('aria-pressed', String(modo === 'solo')); $('btnDuo').setAttribute('aria-pressed', String(modo === 'duo'));
   $('duoHud').hidden = modo !== 'duo'; $('btnPica').hidden = modo === 'duo';
   $('juego').classList.toggle('modo-duo', modo === 'duo');
   $('duoNombre1').textContent = nombres[0]; $('duoNombre2').textContent = nombres[1];
@@ -86,6 +97,6 @@ export function pantallaFin({ titulo, subtitulo, puntos, estrellas, datos, mensa
 }
 
 export function restablecerMenu() {
-  $('juego').classList.remove('modo-duo'); $('duoHud').hidden = true; $('campoJugador2').hidden = false; $('btnPica').hidden = false;
-  mostrar('menu');
+  $('juego').classList.remove('modo-duo'); $('duoHud').hidden = true; $('btnPica').hidden = false;
+  mostrar('menu'); submenu('menuPrincipal');
 }
