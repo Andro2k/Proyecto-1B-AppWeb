@@ -7,10 +7,12 @@ import { dibCarrona } from './entidades/carrona.js';
 import { dibCable } from './entidades/cable.js';
 import { dibNido } from './entidades/nido.js';
 import { dibDecor } from './entidades/decor.js';
+import { dibNube } from './entidades/nube.js';
+import { PAISAJES } from '../datos/paisajes.js';
 import { dibCondor } from './entidades/condor.js';
 
 /* Tabla de despacho: tipo de entidad → función de dibujo. */
-const DIBUJO = { decor: dibDecor, termica: dibTermica, carrona: dibCarrona, cable: dibCable, nido: dibNido, jugador: dibCondor };
+const DIBUJO = { decor: dibDecor, nube: dibNube, termica: dibTermica, carrona: dibCarrona, cable: dibCable, nido: dibNido, jugador: dibCondor };
 
 function actualizarCamara(m) {
   const { cam, p } = m;
@@ -23,7 +25,7 @@ const foco = (W, H) => Math.min(H * 0.9, W * 0.85);
 /** Dibuja un mundo en la vista { W, H, HOR }. */
 export function dibujarMundo(g, m, vista) {
   actualizarCamara(m);
-  const c = { g, ...vista, F: foco(vista.W, vista.H), cam: m.cam, t: m.tiempo };
+  const c = { g, ...vista, F: foco(vista.W, vista.H), cam: m.cam, t: m.tiempo, pais: PAISAJES[m.cfg.id] };
   dibFondo(c); dibSuelo(c);
   // Solo las entidades en pantalla (lista ordenada por z), de lejos a cerca; las dinámicas se intercalan por profundidad.
   const lo = primerIndice(m.ents, m.cam.z - 25), hi = primerIndice(m.ents, m.cam.z + 235);

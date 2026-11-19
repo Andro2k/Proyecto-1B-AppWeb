@@ -83,6 +83,7 @@ export function actualizar(m, dt, ev) {
     if (o.z > p.z + 28) break;
     if (o.hecho) continue;
     if (o.tipo === 'carrona' && !o.veneno && !o.vista && o.z > p.z) { o.vista = true; descubrir(m, 'busqueda', ev); }
+    if (o.clase === 'frailejon' && !o.vista && o.z > p.z && Math.abs(o.x - p.x) < 16) { o.vista = true; descubrir(m, 'paramo', ev); }
     if (o.z <= p.z + 0.4) INTERACCION[o.tipo]?.(m, o, ev);
   }
   if (m.fin) return;
