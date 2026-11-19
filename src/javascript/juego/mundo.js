@@ -15,9 +15,9 @@ function ponderado(tabla) {
 export const crearEntrada = () => ({ izq: false, der: false, aleteo: false, pica: false, tx: null });
 
 /** `herencia`: lo que pasa de un nivel al siguiente (vidas, puntos, datos descubiertos, entrada...). */
-export function crearMundo(nivel, { vidas = VIDAS, descubiertos = new Set(), nombre = '', entrada = crearEntrada(), puntos = 0, estrellas = 0, comidas = 0, limpio = 0 } = {}) {
+export function crearMundo(nivel, { vidas = VIDAS, descubiertos = new Set(), nombre = '', entrada = crearEntrada(), puntos = 0, estrellas = 0, comidas = 0, limpio = 0, sexo = 'macho', compa = false } = {}) {
   const cfg = NIVELES[nivel];
-  const p = { tipo: 'jugador', x: 0, y: 12, z: 0, vx: 0, vy: 0, energia: 100, vidas, invul: 0, cd: 0, aleteo: 0, suelo: false, enTermica: false };
+  const p = { tipo: 'jugador', sexo, x: 0, y: 12, z: 0, vx: 0, vy: 0, energia: 100, vidas, invul: 0, cd: 0, aleteo: 0, suelo: false, enTermica: false };
   const ents = [], termicas = [];
   const reparto = (n, fn) => { const paso = (cfg.largo - 90) / n; for (let i = 0; i < n; i++) fn(50 + paso * (i + rnd(0.1, 0.9)), paso); };
 
@@ -45,7 +45,9 @@ export function crearMundo(nivel, { vidas = VIDAS, descubiertos = new Set(), nom
   ents.push({ tipo: 'nido', x: 0, z: cfg.largo });
   ents.sort((a, b) => a.z - b.z);   // orden por z: permite buscar y dibujar por ventana
 
-  return { nivel, cfg, p, ents, termicas, cam: { x: 0, y: 4, z: 0 }, tiempo: 0,
+  // Compañera (cóndor hembra) que guía hacia las térmicas; solo en modo un jugador
+  const acompanante = compa ? { tipo: 'compa', x: 3, y: 14, z: 18, vx: 0 } : null;
+  return { nivel, cfg, p, ents, compa: acompanante, termicas, cam: { x: 0, y: 4, z: 0 }, tiempo: 0,
     puntos, estrellas, comidas, limpio, descubiertos, entrada, nombre, terminado: false, fin: null };
 }
 

@@ -13,6 +13,7 @@ export const DATOS = {
   veneno: { titulo: 'Cebos envenenados', texto: 'El veneno causó el 63 % de los cóndores heridos o muertos registrados en el norte de Sudamérica (1979–2021).', fuente: 'Restrepo-Cardona et al. (2022), PLOS ONE' },
   cables: { titulo: 'Cables peligrosos', texto: 'Los choques y la electrocución en tendidos eléctricos son una amenaza real.', fuente: 'Restrepo-Cardona et al. (2022), PLOS ONE' },
   poblacion: { titulo: 'Quedan muy pocos', texto: 'Los censos de 2015 y 2018 estimaron entre 94 y 150 cóndores en Ecuador.', fuente: 'Guía del proyecto (confirmar fuente del censo)' },
+  hembra: { titulo: 'Cóndor hembra', texto: 'La hembra no tiene cresta y es algo más pequeña; sus ojos son rojizos, los del macho son pardos.', fuente: 'Andean condor, Wikipedia' },
   paramo: { titulo: 'El páramo guarda agua', texto: 'Los páramos andinos funcionan como esponjas: captan la lluvia y la neblina y las liberan poco a poco.', fuente: 'Por confirmar (páramos andinos del Ecuador)' },
   simbolo: { titulo: 'Ave nacional', texto: 'Es el ave nacional del Ecuador; el Día del Cóndor Andino es el 7 de julio.', fuente: 'Primicias (2019)' }
 };

@@ -32,10 +32,10 @@
 .duo-hud span { font: 700 1.1rem var(--f-pixel); }
 
 /* Datos curiosos: legibles y con tiempo para leer */
-.aviso { position: absolute; z-index: 3; top: 4.6rem; left: 50%; transform: translateX(-50%); width: min(40rem, 86%);
+.aviso { position: absolute; z-index: 3; top: 4.6rem; left: 50%; transform: translateX(-50%); width: min(34rem, 86%);
   background: rgba(11, 18, 24, .94); border: var(--borde) solid var(--crema); border-left: .45rem solid var(--oro); padding: .6rem 1rem; pointer-events: none; }
-.aviso h2 { font-size: 1.1rem; margin: 0 0 .2rem; }
-.aviso p { margin: 0 0 .2rem; font-size: 1rem; line-height: 1.35; }
+.aviso h2 { font-size: 1rem; margin: 0 0 .2rem; }
+.aviso p { margin: 0 0 .2rem; font-size: .9rem; line-height: 1.35; }
 .aviso small { font-size: .8rem; color: var(--hielo); }
 
 /* Botón de picada: solo en pantallas táctiles */

@@ -56,7 +56,8 @@ function iniciarNivel(n) {
   S.nivel = n;
   S.base = run.jug.map(j => ({ puntos: sumar(j.puntos, n), estrellas: sumar(j.estrellas, n) }));
   S.mundos = run.jug.map((_, i) => crearMundo(n, { nombre: run.nombres[i], descubiertos: datos, entrada: crearEntrada(),
-    puntos: S.base[i].puntos, estrellas: S.base[i].estrellas }));
+    puntos: S.base[i].puntos, estrellas: S.base[i].estrellas,
+    sexo: i === 0 ? 'macho' : 'hembra', compa: run.modo === 'solo' }));          // en dos jugadores, el jugador 2 es la hembra
   S.est = 'nivel'; ui.nivelIntro(n); ui.hud(S.mundos[0]);
   if (S.modo === 'duo') ui.marcadorDuo(S.mundos);
 }
