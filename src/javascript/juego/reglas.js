@@ -2,12 +2,8 @@
    ev = { aviso(titulo, texto, fuente?), dato(id) }.  Al terminar, deja m.fin = 'nido' | 'muerte'. */
 import { ANCHO, TECHO, NIDO_ALTO } from '../config.js';
 import { clamp, primerIndice } from '../util.js';
-
-export function descubrir(m, id, ev) {
-  if (m.descubiertos.has(id)) return;
-  m.descubiertos.add(id); m.puntos += 10;
-  ev.dato(id);
-}
+import { descubrir, dano } from './eventos.js';
+import { actualizarTormentas } from './clima.js';
 
 function aletear(m, ev) {
   const p = m.p, despega = p.suelo, costo = despega ? 18 : 6;
@@ -15,14 +11,6 @@ function aletear(m, ev) {
   p.energia -= costo; p.vy = despega ? 7 : 6; p.suelo = false; if (despega) p.y = 0.2;
   p.cd = 0.38; p.aleteo = 0.3;
   if (despega) descubrir(m, 'despegue', ev);
-}
-
-function dano(m, texto, ev) {
-  const p = m.p;
-  if (p.invul > 0 || m.fin) return;
-  p.vidas--; p.invul = 1.8; p.vy = 3;
-  ev.aviso('¡Ay!', texto);
-  if (p.vidas <= 0) m.fin = 'muerte';
 }
 
 /* Interacciones por tipo de entidad (tabla de despacho en lugar de if/else). */
@@ -87,6 +75,7 @@ export function actualizar(m, dt, ev) {
   if (m.tiempo > 4) descubrir(m, 'tamano', ev);
   if (m.tiempo > 6) descubrir(m, 'hembra', ev);
   actualizarCompa(m, dt);
+  actualizarTormentas(m, dt, ev);
 
   // Solo se revisan las entidades cercanas (lista ordenada por z + búsqueda binaria).
   const desde = primerIndice(m.ents, z0 - 0.4);

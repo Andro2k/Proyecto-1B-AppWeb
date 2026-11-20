@@ -14,6 +14,7 @@ export const DATOS = {
   cables: { titulo: 'Cables peligrosos', texto: 'Los choques y la electrocución en tendidos eléctricos son una amenaza real.', fuente: 'Restrepo-Cardona et al. (2022), PLOS ONE' },
   poblacion: { titulo: 'Quedan muy pocos', texto: 'Los censos de 2015 y 2018 estimaron entre 94 y 150 cóndores en Ecuador.', fuente: 'Guía del proyecto (confirmar fuente del censo)' },
   hembra: { titulo: 'Cóndor hembra', texto: 'La hembra no tiene cresta y es algo más pequeña; sus ojos son rojizos, los del macho son pardos.', fuente: 'Andean condor, Wikipedia' },
+  tormenta: { titulo: 'Clima de montaña', texto: 'En la alta montaña andina el clima cambia muy rápido: del sol a la tormenta en pocas horas.', fuente: 'Por confirmar (clima de alta montaña andina)' },
   paramo: { titulo: 'El páramo guarda agua', texto: 'Los páramos andinos funcionan como esponjas: captan la lluvia y la neblina y las liberan poco a poco.', fuente: 'Por confirmar (páramos andinos del Ecuador)' },
   simbolo: { titulo: 'Ave nacional', texto: 'Es el ave nacional del Ecuador; el Día del Cóndor Andino es el 7 de julio.', fuente: 'Primicias (2019)' }
 };

@@ -8,11 +8,13 @@ import { dibCable } from './entidades/cable.js';
 import { dibNido } from './entidades/nido.js';
 import { dibDecor } from './entidades/decor.js';
 import { dibNube } from './entidades/nube.js';
+import { dibTormenta } from './entidades/tormenta.js';
+import { dibClima } from './clima.js';
 import { PAISAJES } from '../datos/paisajes.js';
 import { dibCondor, dibCompa } from './entidades/condor.js';
 
 /* Tabla de despacho: tipo de entidad → función de dibujo. */
-const DIBUJO = { decor: dibDecor, nube: dibNube, compa: dibCompa, termica: dibTermica, carrona: dibCarrona, cable: dibCable, nido: dibNido, jugador: dibCondor };
+const DIBUJO = { decor: dibDecor, nube: dibNube, tormenta: dibTormenta, compa: dibCompa, termica: dibTermica, carrona: dibCarrona, cable: dibCable, nido: dibNido, jugador: dibCondor };
 
 function actualizarCamara(m) {
   const { cam, p } = m;
@@ -36,6 +38,7 @@ export function dibujarMundo(g, m, vista) {
     DIBUJO[o.tipo](c, o);
   }
   for (const d of dinamicas) DIBUJO[d.tipo](c, d);
+  dibClima(c, m);
   if (m.p.invul > 1.4) { g.fillStyle = 'rgba(217,83,79,.25)'; g.fillRect(0, 0, c.W, c.H); }
 }
 

@@ -26,6 +26,12 @@ export function crearMundo(nivel, { vidas = VIDAS, descubiertos = new Set(), nom
   termicas.push(fin); ents.push(fin);
   reparto(cfg.carronas, z => ents.push({ tipo: 'carrona', x: rnd(-9, 9), z, veneno: false, v: Math.random() }));
   reparto(cfg.venenos, z => ents.push({ tipo: 'carrona', x: rnd(-9, 9), z: z + 11, veneno: true, v: Math.random() }));
+  const tormentas = [];
+  reparto(cfg.tormentas || 0, z => {
+    const r = rnd(9, 12), o = { tipo: 'tormenta', x: rnd(-6, 6), y: rnd(17, 21), z: z + rnd(0, 10), r, estado: 'espera', t: 0, mx: 0, rx: 0, semilla: 0,
+      puffs: Array.from({ length: 7 }, (_, k) => ({ dx: (k - 3) * r * 0.3 + rnd(-1, 1), dy: rnd(-0.2, 0.2) * r, r: r * rnd(0.32, 0.5) })) };
+    tormentas.push(o); ents.push(o);
+  });
   reparto(cfg.cables, z => ents.push({ tipo: 'cable', x: 0, z: z + 5, y: rnd(5, 12) }));
   // Paisaje: elementos a los lados del carril, lugares especiales y nubes
   const pais = PAISAJES[cfg.id], lado = () => (Math.random() < 0.5 ? -1 : 1), largo = cfg.largo + 40;
@@ -47,7 +53,7 @@ export function crearMundo(nivel, { vidas = VIDAS, descubiertos = new Set(), nom
 
   // Compañera (cóndor hembra) que guía hacia las térmicas; solo en modo un jugador
   const acompanante = compa ? { tipo: 'compa', x: 3, y: 14, z: 18, vx: 0 } : null;
-  return { nivel, cfg, p, ents, compa: acompanante, termicas, cam: { x: 0, y: 4, z: 0 }, tiempo: 0,
+  return { nivel, cfg, p, ents, tormentas, flash: 0, compa: acompanante, termicas, cam: { x: 0, y: 4, z: 0 }, tiempo: 0,
     puntos, estrellas, comidas, limpio, descubiertos, entrada, nombre, terminado: false, fin: null };
 }
 

@@ -15,16 +15,16 @@ export const NIVELES = [
     descripcion: 'Uno de los volcanes activos más altos del mundo.',
     largo: 750, vel: 15, termicas: 7, carronas: 6, venenos: 3, cables: 5,
     consejo: 'Más cables y más veneno: mira bien antes de bajar a comer.' },
-  { id: 'chimborazo', nombre: 'Camino al Chimborazo', lugar: 'Chimborazo', provincia: 'Chimborazo', lat: -1.47, lon: -78.82, pos: [-2.05, -79.0], alt: 4500,
+  { id: 'chimborazo', nombre: 'Tormenta en el Chimborazo', lugar: 'Chimborazo', provincia: 'Chimborazo', lat: -1.47, lon: -78.82, pos: [-2.05, -79.0], alt: 4500,
     descripcion: 'La cumbre más lejana del centro de la Tierra.',
-    largo: 800, vel: 15, termicas: 8, carronas: 6, venenos: 3, cables: 6,
-    consejo: 'El aire es más frío y fino. Aprovecha cada térmica para ahorrar energía.' },
+    largo: 800, vel: 15, termicas: 8, carronas: 6, venenos: 3, cables: 4, tormentas: 6, lluvia: true,
+    consejo: 'Las nubes oscuras lanzan rayos: cuando el círculo rojo se fije en el suelo, ¡muévete de lado!' },
   { id: 'cajas', nombre: 'Lagunas del Cajas', lugar: 'El Cajas', provincia: 'Azuay', lat: -2.78, lon: -79.23, pos: [-3.0, -79.3], alt: 3900,
     descripcion: 'Parque nacional con cientos de lagunas de páramo.',
     largo: 900, vel: 16, termicas: 8, carronas: 6, venenos: 4, cables: 7,
     consejo: 'El recorrido es largo: cuida tu energía y tus vidas.' },
   { id: 'podocarpus', nombre: 'Rumbo al nido', lugar: 'Podocarpus', provincia: 'Loja y Zamora Chinchipe', lat: -4.1, lon: -79.17, pos: [-4.3, -79.05], alt: 3300,
     descripcion: 'Donde el páramo se une con el bosque nublado del sur.',
-    largo: 1000, vel: 17, termicas: 9, carronas: 6, venenos: 4, cables: 8,
-    consejo: 'El nido está en un risco: llega a su altura para aterrizar en la repisa.' }
+    largo: 1000, vel: 17, termicas: 9, carronas: 6, venenos: 4, cables: 6, tormentas: 4, lluvia: true,
+    consejo: 'El nido está en un risco: llega a su altura y esquiva los rayos de la tormenta.' }
 ];
