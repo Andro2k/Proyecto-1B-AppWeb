@@ -4,6 +4,7 @@ import { ANCHO, TECHO, NIDO_ALTO } from '../config.js';
 import { clamp, primerIndice } from '../util.js';
 import { descubrir, dano } from './eventos.js';
 import { actualizarTormentas } from './clima.js';
+import { actualizarEnemigos } from './enemigos.js';
 
 function aletear(m, ev) {
   const p = m.p, despega = p.suelo, costo = despega ? 18 : 6;
@@ -76,6 +77,7 @@ export function actualizar(m, dt, ev) {
   if (m.tiempo > 6) descubrir(m, 'hembra', ev);
   actualizarCompa(m, dt);
   actualizarTormentas(m, dt, ev);
+  actualizarEnemigos(m, dt, ev);
 
   // Solo se revisan las entidades cercanas (lista ordenada por z + búsqueda binaria).
   const desde = primerIndice(m.ents, z0 - 0.4);

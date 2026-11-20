@@ -32,6 +32,11 @@ export function crearMundo(nivel, { vidas = VIDAS, descubiertos = new Set(), nom
       puffs: Array.from({ length: 7 }, (_, k) => ({ dx: (k - 3) * r * 0.3 + rnd(-1, 1), dy: rnd(-0.2, 0.2) * r, r: r * rnd(0.32, 0.5) })) };
     tormentas.push(o); ents.push(o);
   });
+  const cazadores = [];
+  reparto(cfg.cazadores || 0, z => {
+    const lado = Math.random() < 0.5 ? -1 : 1, o = { tipo: 'cazador', x: lado * rnd(8, 15), z: z + rnd(0, 12), estado: 'espera', t: 0, mx: 0, my: 0, mvy: 0 };
+    cazadores.push(o); ents.push(o);
+  });
   reparto(cfg.cables, z => ents.push({ tipo: 'cable', x: 0, z: z + 5, y: rnd(5, 12) }));
   // Paisaje: elementos a los lados del carril, lugares especiales y nubes
   const pais = PAISAJES[cfg.id], lado = () => (Math.random() < 0.5 ? -1 : 1), largo = cfg.largo + 40;
@@ -53,7 +58,7 @@ export function crearMundo(nivel, { vidas = VIDAS, descubiertos = new Set(), nom
 
   // Compañera (cóndor hembra) que guía hacia las térmicas; solo en modo un jugador
   const acompanante = compa ? { tipo: 'compa', x: 3, y: 14, z: 18, vx: 0 } : null;
-  return { nivel, cfg, p, ents, tormentas, flash: 0, compa: acompanante, termicas, cam: { x: 0, y: 4, z: 0 }, tiempo: 0,
+  return { nivel, cfg, p, ents, tormentas, cazadores, balas: [], flash: 0, compa: acompanante, termicas, cam: { x: 0, y: 4, z: 0 }, tiempo: 0,
     puntos, estrellas, comidas, limpio, descubiertos, entrada, nombre, terminado: false, fin: null };
 }
 

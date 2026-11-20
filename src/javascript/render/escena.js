@@ -9,12 +9,13 @@ import { dibNido } from './entidades/nido.js';
 import { dibDecor } from './entidades/decor.js';
 import { dibNube } from './entidades/nube.js';
 import { dibTormenta } from './entidades/tormenta.js';
+import { dibCazador, dibBala } from './entidades/cazador.js';
 import { dibClima } from './clima.js';
 import { PAISAJES } from '../datos/paisajes.js';
 import { dibCondor, dibCompa } from './entidades/condor.js';
 
 /* Tabla de despacho: tipo de entidad → función de dibujo. */
-const DIBUJO = { decor: dibDecor, nube: dibNube, tormenta: dibTormenta, compa: dibCompa, termica: dibTermica, carrona: dibCarrona, cable: dibCable, nido: dibNido, jugador: dibCondor };
+const DIBUJO = { decor: dibDecor, nube: dibNube, tormenta: dibTormenta, cazador: dibCazador, bala: dibBala, compa: dibCompa, termica: dibTermica, carrona: dibCarrona, cable: dibCable, nido: dibNido, jugador: dibCondor };
 
 function actualizarCamara(m) {
   const { cam, p } = m;
@@ -27,11 +28,11 @@ const foco = (W, H) => Math.min(H * 0.9, W * 0.85);
 /** Dibuja un mundo en la vista { W, H, HOR }. */
 export function dibujarMundo(g, m, vista) {
   actualizarCamara(m);
-  const c = { g, ...vista, F: foco(vista.W, vista.H), cam: m.cam, t: m.tiempo, pais: PAISAJES[m.cfg.id] };
+  const c = { g, ...vista, F: foco(vista.W, vista.H), cam: m.cam, t: m.tiempo, m, pais: PAISAJES[m.cfg.id] };
   dibFondo(c); dibSuelo(c);
   // Solo las entidades en pantalla (lista ordenada por z), de lejos a cerca; las dinámicas se intercalan por profundidad.
   const lo = primerIndice(m.ents, m.cam.z - 25), hi = primerIndice(m.ents, m.cam.z + 235);
-  const dinamicas = (m.compa ? [m.p, m.compa] : [m.p]).sort((a, b) => b.z - a.z);
+  const dinamicas = [m.p, ...(m.compa ? [m.compa] : []), ...m.balas].sort((a, b) => b.z - a.z);
   for (let i = hi - 1; i >= lo; i--) {
     const o = m.ents[i];
     while (dinamicas.length && dinamicas[0].z >= o.z) { const d = dinamicas.shift(); DIBUJO[d.tipo](c, d); }
