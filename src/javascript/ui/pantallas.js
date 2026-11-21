@@ -5,7 +5,7 @@ import { NIVELES } from '../datos/niveles.js';
 import { VIDAS } from '../config.js';
 import { focoInicial } from '../entrada/navegacion.js';
 
-const PANTALLAS = ['menu', 'nombres', 'despedida', 'mapa', 'nivelIntro', 'pausa', 'pregunta', 'derrota', 'fin'];
+const PANTALLAS = ['menu', 'nombres', 'despedida', 'mapa', 'novela', 'nivelIntro', 'pausa', 'pregunta', 'derrota', 'fin'];
 /** Muestra una pantalla (o ninguna: null = en vuelo). Mueve el foco para poder navegar sin ratón. */
 export function mostrar(id) {
   for (const s of PANTALLAS) $(s).hidden = s !== id;

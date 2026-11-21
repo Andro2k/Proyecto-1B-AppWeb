@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="css/pantallas.css">
   <link rel="stylesheet" href="css/menu.css">
   <link rel="stylesheet" href="css/mapa.css">
+  <link rel="stylesheet" href="css/novela.css">
   <link rel="stylesheet" href="css/dialogos.css">
   <link rel="stylesheet" href="css/hud.css">
   <link rel="stylesheet" href="css/responsive.css">
@@ -110,6 +111,22 @@
           <button id="btnTerminar" type="button">Terminar partida</button>
         </div>
       </div>
+    </section>
+
+    <section id="novela" class="pantalla" aria-label="Historia: El nido de Kuntur" hidden>
+      <canvas id="novelaLienzo" aria-hidden="true"></canvas>
+      <button id="btnSaltarNovela" type="button" class="vn-saltar" data-atras>Saltar</button>
+      <div id="vnOpciones" class="vn-opciones" role="group" aria-label="Elige una respuesta" hidden></div>
+      <div id="vnMoraleja" class="vn-moraleja panel" hidden>
+        <h2>Moraleja</h2>
+        <p id="vnMoralejaTexto"></p>
+        <button id="btnVnFin" type="button" class="primario" data-foco>Continuar</button>
+      </div>
+      <button id="vnCaja" type="button" class="vn-caja panel" data-foco>
+        <span id="vnNombre" class="vn-nombre"></span>
+        <span id="vnTexto" class="vn-texto"></span>
+        <i id="vnFlecha" class="vn-flecha" hidden></i>
+      </button>
     </section>
 
     <section id="nivelIntro" class="pantalla" aria-labelledby="tNivel" hidden>

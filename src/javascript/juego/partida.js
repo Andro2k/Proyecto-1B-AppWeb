@@ -1,5 +1,5 @@
 /* Controlador de la partida. Máquina de estados:
-   menu → mapa → nivel (intro) → juego ⇄ pausa → pregunta | derrota → mapa … → fin.
+   menu → mapa → nivel (intro) → juego ⇄ pausa → pregunta | derrota → mapa … → novela → fin.
    Orquesta la lógica pura (mundo/reglas), el progreso persistente y la presentación (ui/*). */
 import { NIVELES } from '../datos/niveles.js';
 import { PREGUNTAS } from '../datos/preguntas.js';
@@ -14,7 +14,9 @@ import { actualizarMapa, nodoSeleccionado } from '../ui/mapa.js';
 import { dibujarPuntajes } from '../ui/dialogos.js';
 
 const S = { est: 'menu', modo: 'solo', run: null, mundos: [], resultados: [], nivel: 0, base: [],
-  guardado: false, guardando: null, respondida: false };
+  guardado: false, guardando: null, respondida: false, cerrada: false, datosFinal: new Set() };
+let novela = null;                                           // novela visual del final (se inyecta desde main.js)
+export const usarNovela = n => { novela = n; };
 export const estado = () => S.est;
 export const modo = () => S.modo;
 export const mundos = () => S.mundos;
@@ -30,7 +32,7 @@ export function iniciar() { S.mundos = [crearMundo(0)]; ui.hud(S.mundos[0]); ui.
 
 /* ---------- Inicio de partida y mapa ---------- */
 export function nuevoJuego(nuevoModo = 'solo') {
-  S.modo = nuevoModo; S.guardado = false; S.guardando = null; S.resultados = [];
+  S.modo = nuevoModo; S.guardado = false; S.guardando = null; S.cerrada = false; S.resultados = [];
   S.run = crearRun(nuevoModo, ui.leerNombres()); guardarProgreso(S.run);
   ui.configurarModo(S.modo, S.run.nombres);
   abrirMapa();
@@ -38,7 +40,7 @@ export function nuevoJuego(nuevoModo = 'solo') {
 
 export function continuar() {
   const run = cargarProgreso(); if (!run) return;
-  S.run = run; S.modo = run.modo; S.guardado = false; S.guardando = null; S.resultados = [];
+  S.run = run; S.modo = run.modo; S.guardado = false; S.guardando = null; S.cerrada = false; S.resultados = [];
   ui.configurarModo(S.modo, run.nombres);
   abrirMapa();
 }
@@ -132,25 +134,31 @@ export function terminarPartida() { if (S.est === 'derrota') { S.run.datos = [..
 export function derrotaAlMapa() { if (S.est === 'derrota') { S.run.datos = [...S.mundos[0].descubiertos]; guardarProgreso(S.run); abrirMapa(S.nivel); } }
 
 function finalizarRun(gano) {
-  if (S.est === 'fin') return;                              // idempotente
-  S.est = 'fin';
+  if (S.cerrada) return;                                    // idempotente: la partida se cierra una sola vez
+  S.cerrada = true;
   const { run } = S, extra = gano ? ['poblacion', 'simbolo'] : [];
-  const datos = new Set([...run.datos, ...extra]);
-  S.resultados = run.jug.map((j, i) => ({ id: `${run.id}-${i}`, nombre: run.nombres[i], puntos: sumar(j.puntos), estrellas: sumar(j.estrellas), datos: datos.size, gano }));
+  S.datosFinal = new Set([...run.datos, ...extra]);
+  S.resultados = run.jug.map((j, i) => ({ id: `${run.id}-${i}`, nombre: run.nombres[i], puntos: sumar(j.puntos), estrellas: sumar(j.estrellas), datos: S.datosFinal.size, gano }));
   borrarProgreso();
-  const [a, b] = S.resultados, total = Object.keys(DATOS).length;
+  guardarPuntaje();                                         // se guarda antes de la historia: saltarla no pierde el puntaje
+  if (gano && novela) { S.est = 'novela'; ui.mostrar('novela'); novela.iniciar(mostrarFin); } else mostrarFin();
+}
+
+function mostrarFin() {
+  S.est = 'fin';
+  const [a, b] = S.resultados, gano = a.gano, total = Object.keys(DATOS).length;
   ui.pantallaFin(S.modo === 'duo' ? {
     titulo: a.puntos === b.puntos ? '¡Empate!' : (a.puntos > b.puntos ? a.nombre : b.nombre) + ' gana la partida',
     subtitulo: a.nombre + ': ' + a.puntos + ' puntos · ' + b.nombre + ': ' + b.puntos + ' puntos',
-    puntos: a.puntos + ' / ' + b.puntos, estrellas: a.estrellas + ' / ' + b.estrellas, datos: datos.size + '/' + total,
+    puntos: a.puntos + ' / ' + b.puntos, estrellas: a.estrellas + ' / ' + b.estrellas, datos: S.datosFinal.size + '/' + total,
     mensaje: 'Cada jugador sumó sus propios puntos. ¡Jueguen otra partida para desempatar!', botonReiniciar: 'Volver a jugar'
   } : {
     titulo: gano ? '¡Los cóndores te lo agradecen!' : 'Fin del juego',
     subtitulo: a.nombre + ' consiguió ' + a.puntos + ' puntos.',
-    puntos: a.puntos, estrellas: a.estrellas, datos: datos.size + '/' + total,
+    puntos: a.puntos, estrellas: a.estrellas, datos: S.datosFinal.size + '/' + total,
     mensaje: DATOS.poblacion.texto + ' Cada cóndor cuenta.', botonReiniciar: 'Jugar otra partida'
   });
-  mostrarPuntajes(); guardarPuntaje();
+  mostrarPuntajes();
 }
 
 /* ---------- Puntajes ---------- */

@@ -11,16 +11,21 @@ import { abrir, dibujarEnciclopedia, dibujarLogros, iniciarAjustes } from './ui/
 import { crearEscenaMenu } from './render/escena_menu.js';
 import * as ui from './ui/pantallas.js';
 import { crearMapa } from './ui/mapa.js';
+import { crearEscenaNovela } from './render/escena_novela.js';
+import { crearNovela } from './ui/novela.js';
+import { HISTORIA } from './datos/historia.js';
 
 const lienzo = $('lienzo'), g = lienzo.getContext('2d');
 const menu = crearEscenaMenu($('escenaMenu'));
+const escenaNovela = crearEscenaNovela($('novelaLienzo'));
+partida.usarNovela(crearNovela({ escena: escenaNovela, guion: HISTORIA }));
 const vista = { W: 1, H: 1, HOR: 1 };   // tamaño en píxeles y horizonte (el foco se calcula por vista)
 
 function ajustar() {
   const r = lienzo.getBoundingClientRect(), d = window.devicePixelRatio || 1;
   lienzo.width = Math.max(1, r.width * d); lienzo.height = Math.max(1, r.height * d);
   vista.W = lienzo.width; vista.H = lienzo.height; vista.HOR = vista.H * 0.36;
-  menu.ajustar();
+  menu.ajustar(); escenaNovela.ajustar();
 }
 window.addEventListener('resize', ajustar);
 
@@ -72,6 +77,7 @@ function bucle(t) {
   partida.tick(dt);
   const est = partida.estado();
   if (est === 'menu') menu.dibujar(t / 1000);
+  else if (est === 'novela') escenaNovela.dibujar(t / 1000);
   else if (est === 'juego' && partida.modo() === 'duo') dibujarDuo(g, partida.mundos(), vista);
   else dibujarMundo(g, partida.mundoPrincipal(), vista);
   requestAnimationFrame(bucle);
