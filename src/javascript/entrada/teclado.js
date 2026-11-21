@@ -13,12 +13,11 @@ const TECLAS = { solo: SOLO, duo: DUO };
 const PAUSA = new Set(['Escape', 'p', 'P']);
 const NAV = { ArrowUp: 'arriba', ArrowDown: 'abajo', ArrowLeft: 'izquierda', ArrowRight: 'derecha' };
 
-/** api = { modo(), estado(), mundos(), pausa() } */
+/** api = { modo(), estado(), accion(jugador, tipo, activa), pausa() } */
 export function instalarTeclado(api) {
   const aplicar = (e, activa) => {
     const destino = TECLAS[api.modo()][e.key]; if (!destino) return;
-    const m = api.mundos()[destino[0]]; if (!m) return;
-    m.entrada[destino[1]] = activa;
+    api.accion(destino[0], destino[1], activa);
     if (activa && api.estado() === 'juego') e.preventDefault();
   };
   window.addEventListener('keydown', e => {

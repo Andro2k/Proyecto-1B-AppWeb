@@ -14,3 +14,6 @@ dialog form { margin-top: 1rem; }
 .logro.logrado { opacity: 1; }
 .ajuste { display: flex; align-items: center; gap: .8rem; margin: 1rem 0; font-weight: 700; }
 .ajuste input { width: 1.3rem; height: 1.3rem; min-height: 0; accent-color: var(--oro); }
+.ajuste-botones { display: flex; gap: .8rem; flex-wrap: wrap; }
+.estado-arduino { margin: .8rem 0 0; font-weight: 700; color: var(--hielo); }
+.estado-arduino[data-conectado="true"] { color: var(--verde); }

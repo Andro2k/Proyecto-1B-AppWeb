@@ -193,7 +193,11 @@
     <h2 id="tAjustes">Ajustes</h2>
     <label class="ajuste"><input id="ajusteContraste" type="checkbox"> Alto contraste</label>
     <label class="ajuste"><input id="ajusteTexto" type="checkbox"> Texto grande</label>
-    <button id="btnPantallaCompleta" type="button">Pantalla completa</button>
+    <div class="ajuste-botones">
+      <button id="btnPantallaCompleta" type="button">Pantalla completa</button>
+      <button id="btnArduino" type="button">Conectar Arduino</button>
+    </div>
+    <p id="estadoArduino" class="estado-arduino" role="status">Arduino sin conectar</p>
     <p>Las preferencias se guardan en este dispositivo.</p>
     <form method="dialog"><button class="primario">Listo</button></form>
   </dialog>

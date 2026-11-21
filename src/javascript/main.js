@@ -7,6 +7,8 @@ import * as partida from './juego/partida.js';
 import { dibujarMundo, dibujarDuo } from './render/escena.js';
 import { instalarTeclado } from './entrada/teclado.js';
 import { instalarTactil } from './entrada/tactil.js';
+import { crearDespachador } from './entrada/acciones.js';
+import { crearArduino } from './entrada/arduino.js';
 import { abrir, dibujarEnciclopedia, dibujarLogros, iniciarAjustes } from './ui/dialogos.js';
 import { crearEscenaMenu } from './render/escena_menu.js';
 import * as ui from './ui/pantallas.js';
@@ -30,7 +32,10 @@ function ajustar() {
 window.addEventListener('resize', ajustar);
 
 /* ---------- Entrada ---------- */
-instalarTeclado({ modo: partida.modo, estado: partida.estado, mundos: partida.mundos, pausa: partida.alternarPausa });
+const despachador = crearDespachador({ estado: partida.estado, mundos: partida.mundos, pausa: partida.alternarPausa });
+instalarTeclado({ modo: partida.modo, estado: partida.estado, accion: despachador.accion, pausa: partida.alternarPausa });
+const arduino = crearArduino(despachador, (texto, conectado) => { $('estadoArduino').textContent = texto; $('estadoArduino').dataset.conectado = conectado; });
+arduino.autoconectar();                                    // si ya se autorizó el puerto, se reconecta solo
 instalarTactil(lienzo, $('btnPica'), { mundo: partida.mundoPrincipal });
 
 /* ---------- Botones ---------- */
@@ -55,6 +60,8 @@ clic('btnDos', () => { modoElegido = 'duo'; ui.pedirNombres(true); });
 clic('btnEmpezar', () => partida.nuevoJuego(modoElegido));
 clic('btnVolverNombres', () => { ui.mostrar('menu'); ui.submenu('menuModo'); });
 clic('btnAjustesMenu', () => abrir('panelAjustes'));
+clic('btnArduino', arduino.conectar);
+if (!arduino.soportado) { $('btnArduino').disabled = true; $('estadoArduino').textContent = 'Arduino: usa Chrome o Edge'; }
 clic('btnSalir', () => { if (document.fullscreenElement) document.exitFullscreen(); window.close(); ui.mostrar('despedida'); });
 clic('btnRegresar', () => { ui.mostrar('menu'); ui.submenu('menuPrincipal'); });
 clic('btnPantallaCompleta', () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen()));
