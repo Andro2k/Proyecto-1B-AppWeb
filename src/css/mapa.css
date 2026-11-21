@@ -20,7 +20,7 @@
 .mapa-rotulo { position: absolute; font: 700 .8rem var(--f-titulo); color: #8fb4d4; letter-spacing: .08em; pointer-events: none; text-shadow: 0 .1rem 0 #0b1218; }
 
 .nodo { position: absolute; width: 2rem; height: 2rem; min-height: 0; padding: 0; transform: translate(-50%, -50%); background: var(--pizarra); color: var(--crema); border: var(--borde) solid var(--crema); overflow: visible; }
-.nodo b { font: 700 1.05rem var(--f-pixel); }
+.nodo b { font: 500 1.05rem var(--f-pixel); }
 .nodo-nombre { position: absolute; top: 50%; transform: translateY(-50%); white-space: nowrap; font: 700 .95rem var(--f-texto); color: #fff; text-shadow: var(--sombra-texto); pointer-events: none; }
 .nodo.der .nodo-nombre { left: calc(100% + .5rem); } .nodo.izq .nodo-nombre { right: calc(100% + .5rem); }
 .nodo.libre { background: var(--oro); color: var(--tinta); border-color: var(--tinta); }
